@@ -21,7 +21,8 @@ export default class App extends React.Component {
     } else {
       return (
         <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          {/* {Platform.OS === 'ios' && <StatusBar barStyle="light-content" />} */}
+          <StatusBar hidden={true} />
           <RootNavigation />
         </View>
       );

@@ -34,45 +34,40 @@ export default class QuadImageScreen extends React.Component {
     <View style={{ flex: 1, flexDirection: "column" }}>
       <View style={{ flex: 1, flexDirection: "row" }}>
         <TouchableHighlight onPress={() =>
-            navigate('SingleImage', { img: img0 })
-        } >
+            navigate('SingleImage', { img: img0 }) } >
           <Image
             source = { img0 }
             style={ styles.img } />
         </TouchableHighlight>
           <View style={{ flex: 1, flexDirection: "row" }}>
           <TouchableHighlight onPress={() =>
-            navigate('SingleImage', { img: img1 })
-        } >
+            navigate('SingleImage', { img: img1 }) } >
             <Image
               source = { img1 }
-              style={ styles.img } 
-            />
+              style={ styles.img } />
           </TouchableHighlight>
         </View>
       </View>
       <View style={{ flex: 1, flexDirection: "column" }}>
         <View style={{ flex: 1, flexDirection: "row" }}>
           <TouchableHighlight onPress={() =>
-            navigate('SingleImage', { img: img2 })
-        } >
+            navigate('SingleImage', { img: img2 }) } >
             <Image
               source = { img2 }
               style={ styles.img } />
           </TouchableHighlight>
             <View style={{ flex: 1, flexDirection: "row" }}>
             <TouchableHighlight onPress={() =>
-            navigate('SingleImage', { img: img3 })
-        } >
+            navigate('SingleImage', { img: img3 }) } >
               <Image
                 source = { img3 }
-                style={ styles.img } 
-              />
+                style={ styles.img } />
             </TouchableHighlight>
           </View>
        </View>
       </View>
     </View>
+    // </FlingGestureHandler>
   );
   }
 }

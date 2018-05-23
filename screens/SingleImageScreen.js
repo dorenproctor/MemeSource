@@ -12,7 +12,8 @@ export default class SingleImageScreen extends React.Component {
     super(props);
     this.state = { 
       currentNumber: props.navigation.state.params.num, 
-      currentImage: props.navigation.state.params.img, 
+      currentImage: props.navigation.state.params.img,
+      setCurrentNumber: props.navigation.state.params.setCurrentNumber,
     };
   }
 
@@ -38,6 +39,10 @@ export default class SingleImageScreen extends React.Component {
           currentImage: img,
         };
     });
+  }
+
+  componentWillUnmount() {
+    this.state.setCurrentNumber(this.state.currentNumber);
   }
 
   render() {

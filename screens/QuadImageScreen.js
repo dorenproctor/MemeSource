@@ -22,6 +22,10 @@ export default class QuadImageScreen extends React.Component {
       this.setState(previousState => {
           return { currentNumber: previousState.currentNumber-4 };
       });
+    } else {
+      this.setState(previousState => {
+        return { currentNumber: 0 };
+    });
     }
   }
 

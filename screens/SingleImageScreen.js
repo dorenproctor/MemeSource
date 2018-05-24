@@ -2,6 +2,8 @@ import React from 'react';
 import { ExpoConfigView } from '@expo/samples';
 import { Image } from 'react-native';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import { Modal } from 'react-native';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 export default class SingleImageScreen extends React.Component {
   static navigationOptions = {
@@ -47,11 +49,21 @@ export default class SingleImageScreen extends React.Component {
 
   render() {
     const img = this.state.currentImage;
-    const gestureRecognizerConfig = {
-      velocityThreshold: 0.3,
-      directionalOffsetThreshold: 80
-    };
+    const { goBack } = this.props.navigation;
     return (
+      <Modal visible={true} transparent={true} onRequestClose={() => goBack(null)}>
+        <ImageViewer imageUrls={[{url: img.uri}]}/>
+      </Modal>
+    );
+  }
+}
+
+    // const gestureRecognizerConfig = {
+    //   velocityThreshold: 0.3,
+    //   directionalOffsetThreshold: 80
+    // };
+
+/*
       <GestureRecognizer
       onSwipeRight={(state) => this.onSwipeRight(state)}
       onSwipeLeft={(state) => this.onSwipeLeft(state)}
@@ -62,6 +74,4 @@ export default class SingleImageScreen extends React.Component {
       }}>
         <Image source={img} style={{flex:1, height: undefined, width: undefined, resizeMode:"contain", backgroundColor: "black" }} />
       </GestureRecognizer>
-    );
-  }
-}
+*/

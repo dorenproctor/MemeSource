@@ -96,15 +96,15 @@ export default class QuadImageScreen extends React.Component {
         <View style={{ flex: 1, flexDirection: "column" }}>
           <View style={{ flex: 1, flexDirection: "row" }}>
             <TouchableHighlight onPress={() =>
-            navigate('SingleImage', { img: img0, num: currentNumber, setCurrentNumber: setCurrentNumber, urls: urls }) } >
+            navigate('SingleImage', { num: currentNumber, setCurrentNumber: setCurrentNumber, urls: urls }) } >
               <Image
                 source = { img0 }
                 style={ styles.img } />
             </TouchableHighlight>
               <View style={{ flex: 1, flexDirection: "row" }}>
-              <TouchableHighlight onPress={() =>
-                navigate('SingleImage', { img: img1, num: currentNumber+1, setCurrentNumber: setCurrentNumber, urls: urls }) } >
-                <Image
+                <TouchableHighlight onPress={() =>
+                navigate('SingleImage', { num: currentNumber+1, setCurrentNumber: setCurrentNumber, urls: urls }) } >
+                  <Image
                 source = { img1 }
                 style={ styles.img } />
               </TouchableHighlight>
@@ -113,20 +113,20 @@ export default class QuadImageScreen extends React.Component {
           <View style={{ flex: 1, flexDirection: "column" }}>
             <View style={{ flex: 1, flexDirection: "row" }}>
               <TouchableHighlight onPress={() =>
-              navigate('SingleImage', { img: img2, num: currentNumber+2, setCurrentNumber: setCurrentNumber, urls: urls }) } >
+              navigate('SingleImage', { num: currentNumber+2, setCurrentNumber: setCurrentNumber, urls: urls }) } >
                 <Image
                   source = { img2 }
                   style={ styles.img } />
               </TouchableHighlight>
                 <View style={{ flex: 1, flexDirection: "row" }}>
-                <TouchableHighlight onPress={() =>
-                navigate('SingleImage', { img: img3, num: currentNumber+3, setCurrentNumber: setCurrentNumber, urls: urls }) } >
-                  <Image
-                    source = { img3 }
-                    style={ styles.img } />
-                </TouchableHighlight>
-              </View>
-          </View>
+                  <TouchableHighlight onPress={() =>
+                  navigate('SingleImage', { num: currentNumber+3, setCurrentNumber: setCurrentNumber, urls: urls }) } >
+                    <Image
+                      source = { img3 }
+                      style={ styles.img } />
+                  </TouchableHighlight>
+                </View>
+            </View>
           </View>
         </View>
       </GestureRecognizer>

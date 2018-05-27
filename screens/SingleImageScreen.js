@@ -1,6 +1,6 @@
 import React from 'react';
 import { ExpoConfigView } from '@expo/samples';
-import { Image } from 'react-native';
+import { Text } from 'react-native';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { Modal } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
@@ -14,34 +14,9 @@ export default class SingleImageScreen extends React.Component {
     super(props);
     this.state = { 
       currentNumber: props.navigation.state.params.num, 
-      currentImage: props.navigation.state.params.img,
       setCurrentNumber: props.navigation.state.params.setCurrentNumber,
       urls: props.navigation.state.params.urls,
     };
-  }
-
-  onSwipeRight(gestureState) {
-    const newNumber = this.state.currentNumber-1;
-    if (newNumber >= 0) {
-      const img = { uri: 'http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/getImage/'+ newNumber };
-      this.setState(previousState => {
-        return { 
-          currentNumber: newNumber, 
-          currentImage: img,
-        };
-    });
-    }
-  }
-
-  onSwipeLeft(gestureState) {
-    const newNumber = this.state.currentNumber+1;
-    const img = { uri: 'http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/getImage/'+ newNumber };
-    this.setState(previousState => {
-        return { 
-          currentNumber: newNumber, 
-          currentImage: img,
-        };
-    });
   }
 
   componentWillUnmount() {
@@ -49,39 +24,19 @@ export default class SingleImageScreen extends React.Component {
   }
 
   render() {
-    console.log(this.state.urls);
     const img = this.state.currentImage;
     const { goBack } = this.props.navigation;
-    const gestureRecognizerConfig = {
-      velocityThreshold: 0.3,
-      directionalOffsetThreshold: 80
+    const {urls, currentNumber } = this.state;
+    const onChange = (index) => {
+      this.setState(previousState => {
+        return {currentNumber: index};
+      })
     };
+
     return (
-      
       <Modal visible={true} transparent={true} onRequestClose={() => goBack(null)}>
-        <ImageViewer imageUrls={this.state.urls} />
+        <ImageViewer imageUrls={urls} index={currentNumber} onChange={onChange} />
       </Modal>
-      
     );
   }
 }
-//  {this.state.urls} />
-//  {[{url: img.uri}]}/>
-
-    // const gestureRecognizerConfig = {
-    //   velocityThreshold: 0.3,
-    //   directionalOffsetThreshold: 80
-    // };
-
-/*
-      <GestureRecognizer
-      onSwipeRight={(state) => this.onSwipeRight(state)}
-      onSwipeLeft={(state) => this.onSwipeLeft(state)}
-      config={gestureRecognizerConfig}
-      style={{
-          flex: 1,
-          backgroundColor: this.state.backgroundColor
-      }}>
-        <Image source={img} style={{flex:1, height: undefined, width: undefined, resizeMode:"contain", backgroundColor: "black" }} />
-      </GestureRecognizer>
-*/

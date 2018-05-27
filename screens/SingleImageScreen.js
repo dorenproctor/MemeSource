@@ -16,6 +16,7 @@ export default class SingleImageScreen extends React.Component {
       currentNumber: props.navigation.state.params.num, 
       currentImage: props.navigation.state.params.img,
       setCurrentNumber: props.navigation.state.params.setCurrentNumber,
+      urls: props.navigation.state.params.urls,
     };
   }
 
@@ -48,15 +49,24 @@ export default class SingleImageScreen extends React.Component {
   }
 
   render() {
+    console.log(this.state.urls);
     const img = this.state.currentImage;
     const { goBack } = this.props.navigation;
+    const gestureRecognizerConfig = {
+      velocityThreshold: 0.3,
+      directionalOffsetThreshold: 80
+    };
     return (
+      
       <Modal visible={true} transparent={true} onRequestClose={() => goBack(null)}>
-        <ImageViewer imageUrls={[{url: img.uri}]}/>
+        <ImageViewer imageUrls={this.state.urls} />
       </Modal>
+      
     );
   }
 }
+//  {this.state.urls} />
+//  {[{url: img.uri}]}/>
 
     // const gestureRecognizerConfig = {
     //   velocityThreshold: 0.3,

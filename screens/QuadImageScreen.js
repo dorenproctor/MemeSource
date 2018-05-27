@@ -6,6 +6,7 @@ import {
 import { createStackNavigator } from 'react-navigation'
 import SingleImageScreen from '../screens/SingleImageScreen';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import 'whatwg-fetch'
 
 export default class QuadImageScreen extends React.Component {
   static navigationOptions = {
@@ -14,7 +15,7 @@ export default class QuadImageScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { currentNumber: 0 };
+    this.state = { currentNumber: 0, urls: null };
   }
 
   onSwipeRight(gestureState) {
@@ -32,6 +33,22 @@ export default class QuadImageScreen extends React.Component {
   onSwipeLeft(gestureState) {
     this.setState(previousState => {
         return { currentNumber: previousState.currentNumber+4 };
+    });
+  }
+
+  
+  componentDidMount() {
+    // This is in QuadImageScreen to pass to SingleImageScreen
+    // so that it is already loaded when its render happens.
+    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/urls')
+    .then((response) => {
+      console.log("Response: ", response);
+      return response.json();
+    }).then((json) => {
+      console.log("json: ", json);
+      this.setState(previousState => {
+        return { urls: json.urls };
+      });
     });
   }
 
@@ -63,6 +80,10 @@ export default class QuadImageScreen extends React.Component {
       this.setState({currentNumber: num});
     };
 
+    
+    const { currentNumber, urls } = this.state;
+
+
     return (
       <GestureRecognizer
       onSwipeRight={(state) => this.onSwipeRight(state)}
@@ -75,14 +96,14 @@ export default class QuadImageScreen extends React.Component {
         <View style={{ flex: 1, flexDirection: "column" }}>
           <View style={{ flex: 1, flexDirection: "row" }}>
             <TouchableHighlight onPress={() =>
-            navigate('SingleImage', { img: img0, num: this.state.currentNumber, setCurrentNumber: setCurrentNumber }) } >
+            navigate('SingleImage', { img: img0, num: currentNumber, setCurrentNumber: setCurrentNumber, urls: urls }) } >
               <Image
                 source = { img0 }
                 style={ styles.img } />
             </TouchableHighlight>
               <View style={{ flex: 1, flexDirection: "row" }}>
               <TouchableHighlight onPress={() =>
-                navigate('SingleImage', { img: img1, num: this.state.currentNumber+1, setCurrentNumber: setCurrentNumber }) } >
+                navigate('SingleImage', { img: img1, num: currentNumber+1, setCurrentNumber: setCurrentNumber, urls: urls }) } >
                 <Image
                 source = { img1 }
                 style={ styles.img } />
@@ -92,14 +113,14 @@ export default class QuadImageScreen extends React.Component {
           <View style={{ flex: 1, flexDirection: "column" }}>
             <View style={{ flex: 1, flexDirection: "row" }}>
               <TouchableHighlight onPress={() =>
-              navigate('SingleImage', { img: img2, num: this.state.currentNumber+2, setCurrentNumber: setCurrentNumber }) } >
+              navigate('SingleImage', { img: img2, num: currentNumber+2, setCurrentNumber: setCurrentNumber, urls: urls }) } >
                 <Image
                   source = { img2 }
                   style={ styles.img } />
               </TouchableHighlight>
                 <View style={{ flex: 1, flexDirection: "row" }}>
                 <TouchableHighlight onPress={() =>
-                navigate('SingleImage', { img: img3, num: this.state.currentNumber+3, setCurrentNumber: setCurrentNumber }) } >
+                navigate('SingleImage', { img: img3, num: currentNumber+3, setCurrentNumber: setCurrentNumber, urls: urls }) } >
                   <Image
                     source = { img3 }
                     style={ styles.img } />

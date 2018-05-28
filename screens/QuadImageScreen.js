@@ -33,7 +33,7 @@ export default class QuadImageScreen extends React.Component {
 
   // make sure not to go over the amount of images loaded in fetch
   onSwipeLeft(gestureState) {
-    if (this.state.urls.length > 3) {
+    if (this.state.urls.length > this.state.currentNumber) {
       this.setState(previousState => {
           return { currentNumber: previousState.currentNumber+4 };
       });

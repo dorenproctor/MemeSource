@@ -35,15 +35,25 @@ export default class SingleImageScreen extends React.Component {
 
     const styles = StyleSheet.create({
       btn: {
+        height: "100%",
         // height: 50,
-        width: Dimensions.get('window').width / 5,
+        // flex: 1,
+        // width: Dimensions.get('window').width / 5,
       },
       container: {
-        flex: 1, // probably?
-        flexDirection: "row",
+        // flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 50,
+        backgroundColor: 'black',
+
+        borderRadius: 4,
+        borderWidth: 0.5,
+        borderColor: 'darkgrey',
       },
-      text: {
-        color: "white",
+      buttonContainer: {
+        flex: 1,
       }
     });
     const action = () => null;
@@ -55,12 +65,22 @@ export default class SingleImageScreen extends React.Component {
     return (
         <Modal visible={true} transparent={true} onRequestClose={() => goBack(null)}>
           <ImageViewer imageUrls={urls} index={currentNumber} onChange={onChange} renderIndicator={()=>null}/>
-          <View style={styles.div}>
-            <Button title={"back"} style={styles.btn} onPress={backButton} color={"blue"} />
-            <Button title={"upvote"} style={styles.btn} onPress={action} color={"blue"} />
-            <Button title={"comments"} style={styles.btn} onPress={action} color={"blue"} />
-            <Button title={"downvote"} style={styles.btn} onPress={action} color={"blue"} />
-            <Button title={"menu"} style={styles.btn} onPress={action} color={"blue"} />
+          <View style={styles.container}>
+            <View style={styles.buttonContainer}>
+              <Button title={"↶"} style={styles.btn} color={"transparent"} onPress={backButton} />
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button title={"👍"} style={styles.btn} color={"transparent"} onPress={action} />
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button title={"💬"} style={styles.btn} color={"transparent"} onPress={action} />
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button title={"👎"} style={styles.btn} color={"transparent"} onPress={action} />
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button title={"☰"} style={styles.btn} color={"transparent"} onPress={action} />
+            </View>
           </View>
         </Modal>
     );

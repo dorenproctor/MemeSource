@@ -20,7 +20,6 @@ export default class QuadImageScreen extends React.Component {
 
   // 4 images load each screen, make sure not to use neg numbers
   onSwipeRight(gestureState) {
-    // alert(this.state.currentNumber)
     if (this.state.currentNumber > 3) {
       this.setState(previousState => {
           return { currentNumber: previousState.currentNumber-4 };
@@ -34,7 +33,6 @@ export default class QuadImageScreen extends React.Component {
 
   // make sure not to go over the amount of images loaded in fetch
   onSwipeLeft(gestureState) {
-    // alert(this.state.currentNumber)
     if (this.state.urls.length > 3) {
       this.setState(previousState => {
           return { currentNumber: previousState.currentNumber+4 };

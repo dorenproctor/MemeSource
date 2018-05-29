@@ -68,7 +68,7 @@ export default class QuadImageScreen extends React.Component {
     const img3 = { uri: 'http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/getImage/'+(this.state.currentNumber+3) };
     const styles = StyleSheet.create({
       img: {
-        resizeMode: 'stretch',
+        resizeMode: 'cover',
         backgroundColor: "darkgray",
         height: Dimensions.get('window').height / 2,
         width: Dimensions.get('window').width / 2,

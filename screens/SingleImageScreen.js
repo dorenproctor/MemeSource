@@ -12,8 +12,8 @@ export default class SingleImageScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { 
-      currentNumber: props.navigation.state.params.num, 
+    this.state = {
+      currentNumber: props.navigation.state.params.num,
       setCurrentNumber: props.navigation.state.params.setCurrentNumber,
       urls: props.navigation.state.params.urls,
     };
@@ -67,19 +67,19 @@ export default class SingleImageScreen extends React.Component {
           <ImageViewer imageUrls={urls} index={currentNumber} onChange={onChange} renderIndicator={()=>null}/>
           <View style={styles.container}>
             <View style={styles.buttonContainer}>
-              <Button title={"↶"} style={styles.btn} color={"transparent"} onPress={backButton} />
+              <Button title={"↶"} style={styles.btn} color={"#5c5c5c"} onPress={backButton} />
             </View>
             <View style={styles.buttonContainer}>
-              <Button title={"👍"} style={styles.btn} color={"transparent"} onPress={action} />
+              <Button title={"👍"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
             </View>
             <View style={styles.buttonContainer}>
-              <Button title={"💬"} style={styles.btn} color={"transparent"} onPress={action} />
+              <Button title={"💬"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
             </View>
             <View style={styles.buttonContainer}>
-              <Button title={"👎"} style={styles.btn} color={"transparent"} onPress={action} />
+              <Button title={"👎"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
             </View>
             <View style={styles.buttonContainer}>
-              <Button title={"☰"} style={styles.btn} color={"transparent"} onPress={action} />
+              <Button title={"☰"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
             </View>
           </View>
         </Modal>

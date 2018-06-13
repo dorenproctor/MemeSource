@@ -26,10 +26,10 @@ export default class SingleImageScreen extends React.Component {
   render() {
     const img = this.state.currentImage;
     const { goBack } = this.props.navigation;
-    const {urls, currentNumber } = this.state;
+    const { urls, currentNumber } = this.state;
     const onChange = (index) => {
       this.setState(previousState => {
-        return {currentNumber: index};
+        return { currentNumber: index };
       })
     };
 
@@ -63,26 +63,26 @@ export default class SingleImageScreen extends React.Component {
     }
 
     return (
-        <Modal visible={true} transparent={true} onRequestClose={() => goBack(null)}>
-          <ImageViewer imageUrls={urls} index={currentNumber} onChange={onChange} renderIndicator={()=>null}/>
-          <View style={styles.container}>
-            <View style={styles.buttonContainer}>
-              <Button title={"↶"} style={styles.btn} color={"#5c5c5c"} onPress={backButton} />
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button title={"👍"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button title={"💬"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button title={"👎"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button title={"☰"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
-            </View>
+      <Modal visible={true} transparent={true} onRequestClose={() => goBack(null)}>
+        <ImageViewer imageUrls={urls} index={currentNumber} onChange={onChange} renderIndicator={() => null} />
+        <View style={styles.container}>
+          <View style={styles.buttonContainer}>
+            <Button title={"↶"} style={styles.btn} color={"#5c5c5c"} onPress={backButton} />
           </View>
-        </Modal>
+          <View style={styles.buttonContainer}>
+            <Button title={"👍"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button title={"💬"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button title={"👎"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button title={"☰"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
+          </View>
+        </View>
+      </Modal>
     );
   }
 }

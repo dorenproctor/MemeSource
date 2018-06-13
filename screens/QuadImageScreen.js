@@ -41,14 +41,10 @@ export default class QuadImageScreen extends React.Component {
   }
 
   componentDidMount() {
-    // This is in QuadImageScreen to pass to SingleImageScreen
-    // so that it is already loaded when its render happens.
     fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/urls')
     .then((response) => {
-      console.log("Response: ", response);
       return response.json();
     }).then((json) => {
-      console.log("json: ", json);
       this.setState(previousState => {
         return { urls: json.urls };
       });
@@ -62,10 +58,21 @@ export default class QuadImageScreen extends React.Component {
       }
     })
     const { navigate } = this.props.navigation;
-    const img0 = { uri: 'http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/getImage/'+this.state.currentNumber };
-    const img1 = { uri: 'http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/getImage/'+(this.state.currentNumber+1) };
-    const img2 = { uri: 'http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/getImage/'+(this.state.currentNumber+2) };
-    const img3 = { uri: 'http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/getImage/'+(this.state.currentNumber+3) };
+
+    const { currentNumber, urls } = this.state;
+
+    if (urls == null) {
+      return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text>Loading </Text>
+        </View>
+      )
+            
+    }
+    const img0 = { uri: urls[currentNumber].url };
+    const img1 = { uri: urls[currentNumber+1].url };
+    const img2 = { uri: urls[currentNumber+2].url };
+    const img3 = { uri: urls[currentNumber+3].url };
     const styles = StyleSheet.create({
       img: {
         resizeMode: 'cover',
@@ -83,7 +90,6 @@ export default class QuadImageScreen extends React.Component {
       this.setState({currentNumber: num});
     };
 
-    const { currentNumber, urls } = this.state;
 
     return (
       <GestureRecognizer

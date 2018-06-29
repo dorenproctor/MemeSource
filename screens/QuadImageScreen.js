@@ -1,12 +1,9 @@
 import React from 'react';
-import { ExpoConfigView } from '@expo/samples';
 import {
-  View, Image, Dimensions, Text, TouchableHighlight, StyleSheet
+  View, Image, Dimensions, Text, Button, TouchableHighlight, StyleSheet
 } from 'react-native';
-import { createStackNavigator } from 'react-navigation'
-import SingleImageScreen from '../screens/SingleImageScreen';
-import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
-import 'whatwg-fetch'
+import GestureRecognizer from 'react-native-swipe-gestures';
+import 'whatwg-fetch';
 
 export default class QuadImageScreen extends React.Component {
   static navigationOptions = {
@@ -25,9 +22,7 @@ export default class QuadImageScreen extends React.Component {
         return { currentNumber: previousState.currentNumber - 4 };
       });
     } else {
-      this.setState(previousState => {
-        return { currentNumber: 0 };
-      });
+      this.setState({ currentNumber: 0 });
     }
   }
 
@@ -45,20 +40,15 @@ export default class QuadImageScreen extends React.Component {
       .then((response) => {
         return response.json();
       }).then((json) => {
-        this.setState(previousState => {
-          return { urls: json.urls };
-        });
+        this.setState({ urls: json.urls });
+      }).catch(err => {
+        console.log(err)
+        alert("Could not fetch images :(");
       });
   }
 
   render() {
-    const stackNavigator = createStackNavigator({
-      SingleImage: {
-        screen: SingleImageScreen,
-      }
-    })
     const { navigate } = this.props.navigation;
-
     const { currentNumber, urls } = this.state;
 
     if (urls == null) {
@@ -67,8 +57,8 @@ export default class QuadImageScreen extends React.Component {
           <Text>Loading </Text>
         </View>
       )
-
     }
+
     const img0 = { uri: urls[currentNumber].url };
     const img1 = { uri: urls[currentNumber + 1].url };
     const img2 = { uri: urls[currentNumber + 2].url };
@@ -80,6 +70,23 @@ export default class QuadImageScreen extends React.Component {
         height: Dimensions.get('window').height / 2,
         width: Dimensions.get('window').width / 2,
       },
+      btn: {
+        height: "100%",
+      },
+      container: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 50,
+        backgroundColor: 'black',
+
+        borderRadius: 4,
+        borderWidth: 0.5,
+        borderColor: 'darkgrey',
+      },
+      buttonContainer: {
+        flex: 1,
+      }
     });
     const gestureRecognizerConfig = {
       velocityThreshold: 0.3,
@@ -90,54 +97,66 @@ export default class QuadImageScreen extends React.Component {
       this.setState({ currentNumber: num });
     };
 
+    const action = () => null;
 
     return (
-      <GestureRecognizer
-        onSwipeRight={(state) => this.onSwipeRight(state)}
-        onSwipeLeft={(state) => this.onSwipeLeft(state)}
-        config={gestureRecognizerConfig}
-        style={{
-          flex: 1,
-          backgroundColor: this.state.backgroundColor
-        }}>
-        <View style={{ flex: 1, flexDirection: "column" }}>
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            <TouchableHighlight onPress={() =>
-              navigate('SingleImage', { num: currentNumber, setCurrentNumber: setCurrentNumber, urls: urls })} >
-              <Image
-                source={img0}
-                style={styles.img}
-              />
-            </TouchableHighlight>
-            <View style={{ flex: 1, flexDirection: "row" }}>
-              <TouchableHighlight onPress={() =>
-                navigate('SingleImage', { num: currentNumber + 1, setCurrentNumber: setCurrentNumber, urls: urls })} >
-                <Image
-                  source={img1}
-                  style={styles.img} />
-              </TouchableHighlight>
-            </View>
-          </View>
+        <GestureRecognizer
+          onSwipeRight={(state) => this.onSwipeRight(state)}
+          onSwipeLeft={(state) => this.onSwipeLeft(state)}
+          config={gestureRecognizerConfig}
+          style={{
+            flex: 1,
+            backgroundColor: this.state.backgroundColor
+          }}>
           <View style={{ flex: 1, flexDirection: "column" }}>
             <View style={{ flex: 1, flexDirection: "row" }}>
               <TouchableHighlight onPress={() =>
-                navigate('SingleImage', { num: currentNumber + 2, setCurrentNumber: setCurrentNumber, urls: urls })} >
+                navigate('SingleImage', { num: currentNumber, setCurrentNumber: setCurrentNumber, urls: urls })} >
                 <Image
-                  source={img2}
-                  style={styles.img} />
+                  source={img0}
+                  style={styles.img}
+                />
               </TouchableHighlight>
               <View style={{ flex: 1, flexDirection: "row" }}>
                 <TouchableHighlight onPress={() =>
-                  navigate('SingleImage', { num: currentNumber + 3, setCurrentNumber: setCurrentNumber, urls: urls })} >
+                  navigate('SingleImage', { num: currentNumber + 1, setCurrentNumber: setCurrentNumber, urls: urls })} >
                   <Image
-                    source={img3}
+                    source={img1}
                     style={styles.img} />
                 </TouchableHighlight>
               </View>
             </View>
+            <View style={{ flex: 1, flexDirection: "column" }}>
+              <View style={{ flex: 1, flexDirection: "row" }}>
+                <TouchableHighlight onPress={() =>
+                  navigate('SingleImage', { num: currentNumber + 2, setCurrentNumber: setCurrentNumber, urls: urls })} >
+                  <Image
+                    source={img2}
+                    style={styles.img} />
+                </TouchableHighlight>
+                <View style={{ flex: 1, flexDirection: "row" }}>
+                  <TouchableHighlight onPress={() =>
+                    navigate('SingleImage', { num: currentNumber + 3, setCurrentNumber: setCurrentNumber, urls: urls })} >
+                    <Image
+                      source={img3}
+                      style={styles.img} />
+                  </TouchableHighlight>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={styles.container}>
+          <View style={styles.buttonContainer}>
+            <Button title={"☰"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button title={" "} style={styles.btn} color={"#5c5c5c"} onPress={action} />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button title={"🔎"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
           </View>
         </View>
-      </GestureRecognizer>
+        </GestureRecognizer>
     );
   }
 }

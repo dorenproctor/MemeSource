@@ -1,7 +1,5 @@
 import React from 'react';
-import { ExpoConfigView } from '@expo/samples';
-import { View, Button, StyleSheet, Dimensions } from 'react-native';
-import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import { View, Button, StyleSheet } from 'react-native';
 import { Modal } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 
@@ -24,24 +22,17 @@ export default class SingleImageScreen extends React.Component {
   }
 
   render() {
-    const img = this.state.currentImage;
     const { goBack } = this.props.navigation;
     const { urls, currentNumber } = this.state;
     const onChange = (index) => {
-      this.setState(previousState => {
-        return { currentNumber: index };
-      })
+      this.setState({ currentNumber: index})
     };
 
     const styles = StyleSheet.create({
       btn: {
         height: "100%",
-        // height: 50,
-        // flex: 1,
-        // width: Dimensions.get('window').width / 5,
       },
       container: {
-        // flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
@@ -70,16 +61,13 @@ export default class SingleImageScreen extends React.Component {
             <Button title={"↶"} style={styles.btn} color={"#5c5c5c"} onPress={backButton} />
           </View>
           <View style={styles.buttonContainer}>
-            <Button title={"👍"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
-          </View>
-          <View style={styles.buttonContainer}>
             <Button title={"💬"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
           </View>
           <View style={styles.buttonContainer}>
             <Button title={"👎"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
           </View>
           <View style={styles.buttonContainer}>
-            <Button title={"☰"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
+            <Button title={"👍"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
           </View>
         </View>
       </Modal>

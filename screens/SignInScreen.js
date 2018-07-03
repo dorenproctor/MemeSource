@@ -16,11 +16,40 @@ export default class SingleImageScreen extends React.Component {
       userText: "",
       emailText: "",
       passwordText: "",
+      user: "",
     };
+    this.signIn = this.signIn.bind(this);
   }
 
   componentWillUnmount() {
     this.state.setCurrentNumber(this.state.currentNumber);
+  }
+
+  signIn() {
+    const { userText, passwordText } = this.state;
+
+    if (!userText || !passwordText) {
+      alert("Username and password both required");
+      return;
+    }
+    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/SignIn', { 
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: userText,
+        password: passwordText,
+      })
+    }).then((response) => { return response.json() })
+      .then((response) => {
+      alert(response.message)
+      this.setState({ user: username })
+    })
+  }
+
+  createAccount() {
+    alert("create account!")
   }
 
   render() {
@@ -65,22 +94,26 @@ export default class SingleImageScreen extends React.Component {
           editable={true}
           onChangeText={(text) => this.setState({userText: text})}
           style={styles.input}
+          autoCapitalize={"none"}
           />
         <Text>Email</Text>
         <TextInput
           editable={true}
           onChangeText={(text) => this.setState({emailText: text})}
           style={styles.input}
+          autoCapitalize={"none"}
           />
         <Text>Password</Text>
         <TextInput
           editable={true}
           onChangeText={(text) => this.setState({passwordText: text})}
           style={styles.input}
+          autoCapitalize={"none"}
+          secureTextEntry={true}
           />
         <Text>{userText}{emailText}{passwordText}</Text>
-        <Button title={"Sign In"} onPress={null} style={styles.btn} />
-        <Button title={"Create Account"} onPress={null} style={styles.btn} />
+        <Button title={"Sign In"} onPress={this.signIn} style={styles.btn} />
+        <Button title={"Create Account"} onPress={this.createAccount} style={styles.btn} />
         <Footer buttons={footerButtons} />
       </View>
     );

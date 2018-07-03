@@ -1,5 +1,6 @@
 import React from 'react';
 import { KeyboardAvoidingView, TextInput, Text, View, Button, StyleSheet } from 'react-native';
+import Footer from '../components/Footer';
 
 export default class SingleImageScreen extends React.Component {
   static navigationOptions = {
@@ -12,7 +13,9 @@ export default class SingleImageScreen extends React.Component {
       currentNumber: props.navigation.state.params.num,
       setCurrentNumber: props.navigation.state.params.setCurrentNumber,
       urls: props.navigation.state.params.urls,
-      userText: "asdf",
+      userText: "",
+      emailText: "",
+      passwordText: "",
     };
   }
 
@@ -22,31 +25,24 @@ export default class SingleImageScreen extends React.Component {
 
   render() {
     const { goBack } = this.props.navigation;
-    const { urls, currentNumber } = this.state;
+    const { urls, currentNumber, userText, emailText, passwordText, } = this.state;
     const onChange = (index) => {
       this.setState({ currentNumber: index})
     };
 
     const styles = StyleSheet.create({
-      btn: {
-        height: "100%",
-      },
       container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 50,
-        backgroundColor: 'black',
-
-        borderRadius: 4,
-        borderWidth: 0.5,
-        borderColor: 'darkgrey',
-      },
-      buttonContainer: {
         flex: 1,
       },
       input: {
-        flex: 1,
+        // flex: 1,
+        height: 75,
+      },
+      label: {
+        height: 50,
+      },
+      btn: {
+        
       },
     });
     const action = () => null;
@@ -55,26 +51,37 @@ export default class SingleImageScreen extends React.Component {
       goBack(null)
     }
 
+    const footerButtons = [
+      {"title": "↶", "action": () => goBack(null)},
+      {"title": " ", "action": () => null},
+      {"title": " ", "action": () => null},
+      {"title": " ", "action": () => null},
+    ];
+
     return (
       <View style={styles.container}>
+        <Text>Username</Text>
         <TextInput
           editable={true}
           onChangeText={(text) => this.setState({userText: text})}
           style={styles.input}
           />
-          <Text>{this.state.userText}</Text>
-        <View style={styles.buttonContainer}>
-          <Button title={"↶"} style={styles.btn} color={"#5c5c5c"} onPress={backButton} />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button title={" "} style={styles.btn} color={"#5c5c5c"} onPress={action} />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button title={" "} style={styles.btn} color={"#5c5c5c"} onPress={action} />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button title={" "} style={styles.btn} color={"#5c5c5c"} onPress={action} />
-        </View>
+        <Text>Email</Text>
+        <TextInput
+          editable={true}
+          onChangeText={(text) => this.setState({emailText: text})}
+          style={styles.input}
+          />
+        <Text>Password</Text>
+        <TextInput
+          editable={true}
+          onChangeText={(text) => this.setState({passwordText: text})}
+          style={styles.input}
+          />
+        <Text>{userText}{emailText}{passwordText}</Text>
+        <Button title={"Sign In"} onPress={null} style={styles.btn} />
+        <Button title={"Create Account"} onPress={null} style={styles.btn} />
+        <Footer buttons={footerButtons} />
       </View>
     );
   }

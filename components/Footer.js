@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import { View, Button, StyleSheet, Dimensions } from 'react-native';
 
 export default class Footer extends React.Component {
   render() {
@@ -18,6 +18,14 @@ export default class Footer extends React.Component {
         borderRadius: 4,
         borderWidth: 0.5,
         borderColor: 'darkgrey',
+
+
+
+        // position: 'absolute',
+        // left: 0, 
+        // top: Dimensions.get('window').height - 50,
+        // bottom: Dimensions.get('window').height, 
+        // width: Dimensions.get('window').width,
       },
       buttonContainer: {
         flex: 1,
@@ -30,7 +38,7 @@ export default class Footer extends React.Component {
         </View>
       );
     });
-    
+
     return (
       <View style={styles.container}>
         {renderButtons}

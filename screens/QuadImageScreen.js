@@ -65,6 +65,7 @@ export default class QuadImageScreen extends React.Component {
     const img1 = { uri: urls[currentNumber + 1].url };
     const img2 = { uri: urls[currentNumber + 2].url };
     const img3 = { uri: urls[currentNumber + 3].url };
+
     const styles = StyleSheet.create({
       img: {
         resizeMode: 'cover',
@@ -72,24 +73,8 @@ export default class QuadImageScreen extends React.Component {
         height: Dimensions.get('window').height / 2,
         width: Dimensions.get('window').width / 2,
       },
-      btn: {
-        height: "100%",
-      },
-      container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 50,
-        backgroundColor: 'black',
-
-        borderRadius: 4,
-        borderWidth: 0.5,
-        borderColor: 'darkgrey',
-      },
-      buttonContainer: {
-        flex: 1,
-      }
     });
+    
     const gestureRecognizerConfig = {
       velocityThreshold: 0.3,
       directionalOffsetThreshold: 80
@@ -101,7 +86,7 @@ export default class QuadImageScreen extends React.Component {
 
     const footerButtons = [
       {"title": "☰", "action": () => goBack(null)},
-      {"title": " ", "action": () => null},
+      {"title": "Sign In", "action": () => navigate('SignIn', { num: currentNumber, setCurrentNumber: setCurrentNumber, urls: urls })},
       {"title": "🔎", "action": () => null},
     ];
 

@@ -4,6 +4,8 @@ import {
 } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import 'whatwg-fetch';
+import Footer from '../components/Footer';
+
 
 export default class QuadImageScreen extends React.Component {
   static navigationOptions = {
@@ -97,7 +99,11 @@ export default class QuadImageScreen extends React.Component {
       this.setState({ currentNumber: num });
     };
 
-    const action = () => null;
+    const footerButtons = [
+      {"title": "☰", "action": () => goBack(null)},
+      {"title": " ", "action": () => null},
+      {"title": "🔎", "action": () => null},
+    ];
 
     return (
         <GestureRecognizer
@@ -145,17 +151,7 @@ export default class QuadImageScreen extends React.Component {
               </View>
             </View>
           </View>
-          <View style={styles.container}>
-          <View style={styles.buttonContainer}>
-            <Button title={"☰"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
-          </View>
-          <View style={styles.buttonContainer}>
-            <Button title={" "} style={styles.btn} color={"#5c5c5c"} onPress={action} />
-          </View>
-          <View style={styles.buttonContainer}>
-            <Button title={"🔎"} style={styles.btn} color={"#5c5c5c"} onPress={action} />
-          </View>
-        </View>
+          <Footer buttons={footerButtons}/>
         </GestureRecognizer>
     );
   }

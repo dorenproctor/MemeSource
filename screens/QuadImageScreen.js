@@ -85,7 +85,7 @@ export default class QuadImageScreen extends React.Component {
     }
 
     const footerButtons = [
-      {"title": "☰", "action": () => goBack(null)},
+      {"title": "☰", "action": () => null},
       {"title": "Sign In", "action": () => navigate('SignIn', { num: currentNumber, setCurrentNumber: setCurrentNumber, urls: urls })},
       {"title": "🔎", "action": () => null},
     ]

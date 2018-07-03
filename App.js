@@ -1,13 +1,13 @@
-import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
-import { AppLoading, Asset, Font } from 'expo';
-import { Ionicons } from '@expo/vector-icons';
-import RootNavigation from './navigation/RootNavigation';
+import React from 'react'
+import { Platform, StatusBar, StyleSheet, View } from 'react-native'
+import { AppLoading, Asset, Font } from 'expo'
+import { Ionicons } from '@expo/vector-icons'
+import RootNavigation from './navigation/RootNavigation'
 
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
-  };
+  }
 
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
@@ -17,7 +17,7 @@ export default class App extends React.Component {
           onError={this._handleLoadingError}
           onFinish={this._handleFinishLoading}
         />
-      );
+      )
     } else {
       return (
         <View style={styles.container}>
@@ -25,7 +25,7 @@ export default class App extends React.Component {
           <StatusBar hidden={true} />
           <RootNavigation />
         </View>
-      );
+      )
     }
   }
 
@@ -42,18 +42,18 @@ export default class App extends React.Component {
         // to remove this if you are not using it in your app
         'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
       }),
-    ]);
-  };
+    ])
+  }
 
   _handleLoadingError = error => {
     // In this case, you might want to report the error to your error
     // reporting service, for example Sentry
-    console.warn(error);
-  };
+    console.warn(error)
+  }
 
   _handleFinishLoading = () => {
-    this.setState({ isLoadingComplete: true });
-  };
+    this.setState({ isLoadingComplete: true })
+  }
 }
 
 const styles = StyleSheet.create({
@@ -61,4 +61,4 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-});
+})

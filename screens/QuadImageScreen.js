@@ -1,30 +1,30 @@
-import React from 'react';
+import React from 'react'
 import {
   View, Image, Dimensions, Text, Button, TouchableHighlight, StyleSheet
-} from 'react-native';
-import GestureRecognizer from 'react-native-swipe-gestures';
-import 'whatwg-fetch';
-import Footer from '../components/Footer';
+} from 'react-native'
+import GestureRecognizer from 'react-native-swipe-gestures'
+import 'whatwg-fetch'
+import Footer from '../components/Footer'
 
 
 export default class QuadImageScreen extends React.Component {
   static navigationOptions = {
     header: null,
-  };
+  }
 
   constructor(props) {
-    super(props);
-    this.state = { currentNumber: 0, urls: null };
+    super(props)
+    this.state = { currentNumber: 0, urls: null }
   }
 
   // 4 images load each screen, make sure not to use neg numbers
   onSwipeRight(gestureState) {
     if (this.state.currentNumber > 3) {
       this.setState(previousState => {
-        return { currentNumber: previousState.currentNumber - 4 };
-      });
+        return { currentNumber: previousState.currentNumber - 4 }
+      })
     } else {
-      this.setState({ currentNumber: 0 });
+      this.setState({ currentNumber: 0 })
     }
   }
 
@@ -32,26 +32,26 @@ export default class QuadImageScreen extends React.Component {
   onSwipeLeft(gestureState) {
     if (this.state.urls.length > this.state.currentNumber) {
       this.setState(previousState => {
-        return { currentNumber: previousState.currentNumber + 4 };
-      });
+        return { currentNumber: previousState.currentNumber + 4 }
+      })
     }
   }
 
   componentDidMount() {
     fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/urls')
       .then((response) => {
-        return response.json();
+        return response.json()
       }).then((json) => {
-        this.setState({ urls: json.urls });
+        this.setState({ urls: json.urls })
       }).catch(err => {
         console.log(err)
-        alert("Could not fetch images :(");
-      });
+        alert("Could not fetch images :(")
+      })
   }
 
   render() {
-    const { navigate } = this.props.navigation;
-    const { currentNumber, urls } = this.state;
+    const { navigate } = this.props.navigation
+    const { currentNumber, urls } = this.state
 
     if (urls == null) {
       return (
@@ -61,10 +61,10 @@ export default class QuadImageScreen extends React.Component {
       )
     }
 
-    const img0 = { uri: urls[currentNumber].url };
-    const img1 = { uri: urls[currentNumber + 1].url };
-    const img2 = { uri: urls[currentNumber + 2].url };
-    const img3 = { uri: urls[currentNumber + 3].url };
+    const img0 = { uri: urls[currentNumber].url }
+    const img1 = { uri: urls[currentNumber + 1].url }
+    const img2 = { uri: urls[currentNumber + 2].url }
+    const img3 = { uri: urls[currentNumber + 3].url }
 
     const styles = StyleSheet.create({
       img: {
@@ -73,22 +73,22 @@ export default class QuadImageScreen extends React.Component {
         height: Dimensions.get('window').height / 2,
         width: Dimensions.get('window').width / 2,
       },
-    });
+    })
     
     const gestureRecognizerConfig = {
       velocityThreshold: 0.3,
       directionalOffsetThreshold: 80
-    };
+    }
 
     const setCurrentNumber = (num) => {
-      this.setState({ currentNumber: num });
-    };
+      this.setState({ currentNumber: num })
+    }
 
     const footerButtons = [
       {"title": "☰", "action": () => goBack(null)},
       {"title": "Sign In", "action": () => navigate('SignIn', { num: currentNumber, setCurrentNumber: setCurrentNumber, urls: urls })},
       {"title": "🔎", "action": () => null},
-    ];
+    ]
 
     return (
         <GestureRecognizer
@@ -138,6 +138,6 @@ export default class QuadImageScreen extends React.Component {
           </View>
           <Footer buttons={footerButtons}/>
         </GestureRecognizer>
-    );
+    )
   }
 }

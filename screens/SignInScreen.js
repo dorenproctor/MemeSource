@@ -1,14 +1,14 @@
-import React from 'react';
-import { KeyboardAvoidingView, TextInput, Text, View, Button, StyleSheet } from 'react-native';
-import Footer from '../components/Footer';
+import React from 'react'
+import { KeyboardAvoidingView, TextInput, Text, View, Button, StyleSheet } from 'react-native'
+import Footer from '../components/Footer'
 
 export default class SingleImageScreen extends React.Component {
   static navigationOptions = {
     header: null,
-  };
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       currentNumber: props.navigation.state.params.num,
       setCurrentNumber: props.navigation.state.params.setCurrentNumber,
@@ -17,20 +17,20 @@ export default class SingleImageScreen extends React.Component {
       emailText: "",
       passwordText: "",
       user: "",
-    };
-    this.signIn = this.signIn.bind(this);
+    }
+    this.signIn = this.signIn.bind(this)
   }
 
   componentWillUnmount() {
-    this.state.setCurrentNumber(this.state.currentNumber);
+    this.state.setCurrentNumber(this.state.currentNumber)
   }
 
   signIn() {
-    const { userText, passwordText } = this.state;
+    const { userText, passwordText } = this.state
 
     if (!userText || !passwordText) {
-      alert("Username and password both required");
-      return;
+      alert("Username and password both required")
+      return
     }
     fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/SignIn', { 
       method: 'POST',
@@ -53,11 +53,11 @@ export default class SingleImageScreen extends React.Component {
   }
 
   render() {
-    const { goBack } = this.props.navigation;
-    const { urls, currentNumber, userText, emailText, passwordText, } = this.state;
+    const { goBack } = this.props.navigation
+    const { urls, currentNumber, userText, emailText, passwordText, } = this.state
     const onChange = (index) => {
       this.setState({ currentNumber: index})
-    };
+    }
 
     const styles = StyleSheet.create({
       container: {
@@ -73,8 +73,8 @@ export default class SingleImageScreen extends React.Component {
       btn: {
         
       },
-    });
-    const action = () => null;
+    })
+    const action = () => null
 
     const backButton = () => {
       goBack(null)
@@ -85,7 +85,7 @@ export default class SingleImageScreen extends React.Component {
       {"title": " ", "action": () => null},
       {"title": " ", "action": () => null},
       {"title": " ", "action": () => null},
-    ];
+    ]
 
     return (
       <View style={styles.container}>
@@ -116,6 +116,6 @@ export default class SingleImageScreen extends React.Component {
         <Button title={"Create Account"} onPress={this.createAccount} style={styles.btn} />
         <Footer buttons={footerButtons} />
       </View>
-    );
+    )
   }
 }

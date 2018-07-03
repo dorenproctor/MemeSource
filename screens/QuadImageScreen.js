@@ -42,7 +42,7 @@ export default class QuadImageScreen extends React.Component {
       .then((response) => {
         return response.json()
       }).then((json) => {
-        this.setState({ urls: json.urls })
+        this.setState({ urls: json.content })
       }).catch(err => {
         console.log(err)
         alert("Could not fetch images :(")

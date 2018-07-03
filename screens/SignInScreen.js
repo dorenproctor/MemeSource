@@ -26,7 +26,7 @@ export default class SingleImageScreen extends React.Component {
   }
 
   signIn() {
-    const { userText, passwordText } = this.state
+    const { userText, passwordText, username } = this.state
 
     if (!userText || !passwordText) {
       alert("Username and password both required")

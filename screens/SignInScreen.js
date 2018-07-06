@@ -19,6 +19,7 @@ export default class SingleImageScreen extends React.Component {
       user: "",
     }
     this.signIn = this.signIn.bind(this)
+    this.createUser = this.createUser.bind(this)
   }
 
   componentWillUnmount() {
@@ -32,7 +33,7 @@ export default class SingleImageScreen extends React.Component {
       alert("Username and password both required")
       return
     }
-    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/SignIn', { 
+    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/signIn', { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -48,8 +49,28 @@ export default class SingleImageScreen extends React.Component {
     })
   }
 
-  createAccount() {
-    alert("create account!")
+  createUser() {
+    const { userText, emailText, passwordText, username } = this.state
+
+    if (!userText || !emailText || !passwordText) {
+      alert("Username, email, and password are all required")
+      return
+    }
+    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/createUser', { 
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: userText,
+        email: emailText,
+        password: passwordText,
+      })
+    }).then((response) => { return response.json() })
+      .then((response) => {
+      alert(response.message)
+      this.setState({ user: username })
+    })
   }
 
   render() {
@@ -113,7 +134,7 @@ export default class SingleImageScreen extends React.Component {
           />
         <Text>{userText}{emailText}{passwordText}</Text>
         <Button title={"Sign In"} onPress={this.signIn} style={styles.btn} />
-        <Button title={"Create Account"} onPress={this.createAccount} style={styles.btn} />
+        <Button title={"Create Account"} onPress={this.createUser} style={styles.btn} />
         <Footer buttons={footerButtons} />
       </View>
     )

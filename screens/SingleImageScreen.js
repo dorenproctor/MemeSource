@@ -24,6 +24,8 @@ export default class SingleImageScreen extends React.Component {
   render() {
     const { goBack } = this.props.navigation
     const { urls, currentNumber } = this.state
+    const { user } = this.props.navigation.state.params
+    // alert(user)
     const onChange = (index) => {
       this.setState({ currentNumber: index})
     }

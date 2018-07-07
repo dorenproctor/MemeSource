@@ -12,6 +12,7 @@ export default class SingleImageScreen extends React.Component {
     this.state = {
       currentNumber: props.navigation.state.params.num,
       setCurrentNumber: props.navigation.state.params.setCurrentNumber,
+      setUser: props.navigation.state.params.setUser,
       urls: props.navigation.state.params.urls,
       userText: "",
       emailText: "",
@@ -24,10 +25,12 @@ export default class SingleImageScreen extends React.Component {
 
   componentWillUnmount() {
     this.state.setCurrentNumber(this.state.currentNumber)
+    this.state.setUser(this.state.user)
+    // alert(this.state.user)
   }
 
   signIn() {
-    const { userText, passwordText, username } = this.state
+    const { userText, passwordText } = this.state
 
     if (!userText || !passwordText) {
       alert("Username and password both required")
@@ -45,7 +48,7 @@ export default class SingleImageScreen extends React.Component {
     }).then((response) => { return response.json() })
       .then((response) => {
       alert(response.message)
-      this.setState({ user: username })
+      this.setState({ user: userText })
     })
   }
 

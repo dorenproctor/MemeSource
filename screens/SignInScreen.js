@@ -26,7 +26,6 @@ export default class SingleImageScreen extends React.Component {
   componentWillUnmount() {
     this.state.setCurrentNumber(this.state.currentNumber)
     this.state.setUser(this.state.user)
-    // alert(this.state.user)
   }
 
   signIn() {
@@ -48,7 +47,11 @@ export default class SingleImageScreen extends React.Component {
     }).then((response) => { return response.json() })
       .then((response) => {
       alert(response.message)
-      this.setState({ user: userText })
+      if (response.statusCode == 200) {
+        this.setState({ user: userText })
+        const { goBack } = this.props.navigation
+        goBack(null)
+      }
     })
   }
 
@@ -72,7 +75,11 @@ export default class SingleImageScreen extends React.Component {
     }).then((response) => { return response.json() })
       .then((response) => {
       alert(response.message)
-      this.setState({ user: username })
+      if (response.statusCode == 200) {
+        this.setState({ user: username })
+        const { goBack } = this.props.navigation
+        goBack(null)
+      }
     })
   }
 

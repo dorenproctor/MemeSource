@@ -62,6 +62,54 @@ export default class SingleImageScreen extends React.Component {
     return string += imageInfo.downvotes
   }
 
+  upvote() {
+    const { user, currentNumber } = this.state
+    if (!user) {
+      alert("You must be signed in to vote")
+      return
+    }
+    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/upvoteImage/'+user+'/'+currentNumber, { 
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+      })
+    }).then((response) => { return response.json() })
+      .then((response) => {
+        if (response.statusCode == 200) {
+          // alert(JSON.stringify(response.content))
+          this.setState({ imageInfo: response.content })
+        } else (
+          alert(response.message)
+        )
+    })
+  }
+
+  downvote() {
+    const { user, currentNumber } = this.state
+    if (!user) {
+      alert("You must be signed in to vote")
+      return
+    }
+    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/downvoteImage/'+user+'/'+currentNumber, { 
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+      })
+    }).then((response) => { return response.json() })
+      .then((response) => {
+        if (response.statusCode == 200) {
+          // alert(JSON.stringify(response.content))
+          this.setState({ imageInfo: response.content })
+        } else (
+          alert(response.message)
+        )
+    })
+  }
+
   render() {
     const { goBack } = this.props.navigation
     const { urls, currentNumber, imageInfo } = this.state
@@ -76,8 +124,8 @@ export default class SingleImageScreen extends React.Component {
     const footerButtons = [
       {"title": "↶", "action": () => goBack(null)},
       {"title": "💬", "action": () => null},
-      {"title": downvoteString, "action": () => null},
-      {"title": upvoteString, "action": () => null},
+      {"title": downvoteString, "action": () => this.downvote()},
+      {"title": upvoteString, "action": () => this.upvote()},
     ]
 
     return (

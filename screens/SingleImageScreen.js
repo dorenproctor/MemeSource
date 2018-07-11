@@ -68,12 +68,14 @@ export default class SingleImageScreen extends React.Component {
       alert("You must be signed in to vote")
       return
     }
-    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/upvoteImage/'+user+'/'+currentNumber, { 
+    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/upvoteImage', { 
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        username: user,
+        imageId: currentNumber,
       })
     }).then((response) => { return response.json() })
       .then((response) => {
@@ -92,12 +94,14 @@ export default class SingleImageScreen extends React.Component {
       alert("You must be signed in to vote")
       return
     }
-    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/downvoteImage/'+user+'/'+currentNumber, { 
+    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/downvoteImage', { 
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        username: "asdfjosaeifjoaiefj",
+        imageId: currentNumber,
       })
     }).then((response) => { return response.json() })
       .then((response) => {

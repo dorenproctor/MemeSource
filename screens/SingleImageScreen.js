@@ -101,7 +101,7 @@ export default class SingleImageScreen extends React.Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        username: "asdfjosaeifjoaiefj",
+        username: user,
         imageId: currentNumber,
       })
     }).then((response) => { return response.json() })

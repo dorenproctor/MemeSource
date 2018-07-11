@@ -15,7 +15,8 @@ export default class SingleImageScreen extends React.Component {
       setCurrentNumber: props.navigation.state.params.setCurrentNumber,
       urls: props.navigation.state.params.urls,
       imageInfo: null,
-      user: this.props.navigation.state.params.user
+      user: this.props.navigation.state.params.user,
+      modalOn: true,
     }
   }
 
@@ -24,7 +25,7 @@ export default class SingleImageScreen extends React.Component {
     .then((response) => {
       return response.json()
     }).then((json) => {
-      this.setState({ imageInfo: json.content })
+        this.setState({ imageInfo: json.content })
       // alert(JSON.stringify(json.content))
     }).catch(err => {
       console.log(err)
@@ -116,8 +117,9 @@ export default class SingleImageScreen extends React.Component {
 
   render() {
     const { goBack } = this.props.navigation
-    const { urls, currentNumber, imageInfo } = this.state
+    const { urls, currentNumber, modalOn } = this.state
     const { user } = this.props.navigation.state.params
+    const { navigate } = this.props.navigation
     // alert(user)
     const onChange = (index) => {
       this.setState({ currentNumber: index}, () => this.getImageInfo() )
@@ -125,9 +127,16 @@ export default class SingleImageScreen extends React.Component {
 
     const downvoteString = this.getDownvoteString()
     const upvoteString = this.getUpvoteString()
+    const turnModalOn = (num) => {
+      this.setState({ modalOn: true })
+    }
+
     const footerButtons = [
       {"title": "↶", "action": () => goBack(null)},
-      {"title": "💬", "action": () => null},
+      {"title": "💬", "action": () => {
+        this.setState({ modalOn: false })
+        navigate('Comment', { num: currentNumber, user: user, turnModalOn: turnModalOn })}
+      },
       {"title": downvoteString, "action": () => this.downvote()},
       {"title": upvoteString, "action": () => this.upvote()},
     ]
@@ -155,7 +164,7 @@ export default class SingleImageScreen extends React.Component {
     })
 
     return (
-      <Modal visible={true} transparent={true} onRequestClose={() => goBack(null)}>
+      <Modal visible={modalOn} transparent={true} onRequestClose={() => goBack(null)}>
         <ImageViewer imageUrls={urls} index={currentNumber} onChange={onChange} renderIndicator={() => null} />
         <Footer buttons={footerButtons} customStyle={customFooterStyle} />
       </Modal>

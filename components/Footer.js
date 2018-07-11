@@ -3,8 +3,8 @@ import { View, Button, StyleSheet, Dimensions } from 'react-native'
 
 export default class Footer extends React.Component {
   render() {
-    const { buttons } = this.props
-    const styles = StyleSheet.create({
+    const { buttons, customStyle } = this.props
+    const styles = customStyle ? customStyle : StyleSheet.create({
       btn: {
         height: "100%",
       },
@@ -19,13 +19,11 @@ export default class Footer extends React.Component {
         borderWidth: 0.5,
         borderColor: 'darkgrey',
 
-
-
-        // position: 'absolute',
-        // left: 0, 
-        // top: Dimensions.get('window').height - 50,
-        // bottom: Dimensions.get('window').height, 
-        // width: Dimensions.get('window').width,
+        position: 'absolute',
+        left: 0, 
+        top: Dimensions.get('window').height - 50,
+        bottom: Dimensions.get('window').height, 
+        width: Dimensions.get('window').width,
       },
       buttonContainer: {
         flex: 1,

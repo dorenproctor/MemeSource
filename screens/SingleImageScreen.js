@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal } from 'react-native'
+import { Modal, StyleSheet } from 'react-native'
 import ImageViewer from 'react-native-image-zoom-viewer'
 import Footer from '../components/Footer'
 
@@ -132,10 +132,32 @@ export default class SingleImageScreen extends React.Component {
       {"title": upvoteString, "action": () => this.upvote()},
     ]
 
+    // Without the custom style, half the footer is below the screen
+    // because position: absolute doesn't work inside the modal
+    const customFooterStyle = StyleSheet.create({
+      btn: {
+        height: "100%",
+      },
+      container: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 50,
+        backgroundColor: 'black',
+  
+        borderRadius: 4,
+        borderWidth: 0.5,
+        borderColor: 'darkgrey',
+      },
+      buttonContainer: {
+        flex: 1,
+      }
+    })
+
     return (
       <Modal visible={true} transparent={true} onRequestClose={() => goBack(null)}>
         <ImageViewer imageUrls={urls} index={currentNumber} onChange={onChange} renderIndicator={() => null} />
-        <Footer buttons={footerButtons}/>
+        <Footer buttons={footerButtons} customStyle={customFooterStyle} />
       </Modal>
     )
   }

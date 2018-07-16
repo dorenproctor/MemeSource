@@ -43,27 +43,29 @@ export default class SingleImageScreen extends React.Component {
     if (!this.state.commentBox) {
       return
     }
-    if (!this.user) {
-      alert("You must be signed in to comments")
+    if (!this.state.user) {
+      alert("You must be signed in to comment")
       return
     }
-    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/downvoteImage', { 
+    const { goBack } = this.props.navigation
+    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/postComment', { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        user: user,
-        imageId: currentNumber,
+        user: this.state.user,
+        imageId: this.state.currentNumber,
         content: this.state.commentBox
       })
     }).then((response) => { return response.json() })
       .then((response) => {
         if (response.statusCode == 200) {
           // alert(JSON.stringify(response.content))
-          this.setState({ imageInfo: response.content })
+          goBack(null)
+          alert("Comment submitted")
         } else (
-          alert(response.message)
+          alert(JSON.stringify(response.message))
         )
     })
     //curl -i -X POST -H 'Content-Type: application/json' -d '{"imageId": "0", "content": "Generic comment.", "user": "someUsername"}' http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/postComment
@@ -87,7 +89,7 @@ export default class SingleImageScreen extends React.Component {
       {"title": "↶", "action": () => goBack(null)},
       {"title": "💬", "action": () => this.myInput.focus()},
       {"title": "", "action": () => null},
-      {"title": "Submit Comment", "action": () => null},
+      {"title": "Submit Comment", "action": () => this.submitComment()},
     ]
     const comments = !commentInfo ? null : commentInfo.map((obj, i) => {
       return (

@@ -1,5 +1,5 @@
 import React from 'react'
-import { KeyboardAvoidingView, TextInput, Text, View, Button, StyleSheet } from 'react-native'
+import { AsyncStorage, TextInput, Text, View, Button, StyleSheet } from 'react-native'
 import Footer from '../components/Footer'
 
 export default class SingleImageScreen extends React.Component {
@@ -49,6 +49,7 @@ export default class SingleImageScreen extends React.Component {
       alert(response.message)
       if (response.statusCode == 200) {
         this.setState({ user: userText })
+        AsyncStorage.setItem('user', userText)
         const { goBack } = this.props.navigation
         goBack(null)
       }
@@ -77,6 +78,7 @@ export default class SingleImageScreen extends React.Component {
       alert(response.message)
       if (response.statusCode == 200) {
         this.setState({ user: username })
+        AsyncStorage.setItem('user', userText)
         const { goBack } = this.props.navigation
         goBack(null)
       }

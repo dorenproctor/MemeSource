@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, StyleSheet } from 'react-native'
+import { Modal, StyleSheet, AsyncStorage } from 'react-native'
 import ImageViewer from 'react-native-image-zoom-viewer'
 import Footer from '../components/Footer'
 
@@ -26,7 +26,6 @@ export default class SingleImageScreen extends React.Component {
       return response.json()
     }).then((json) => {
         this.setState({ imageInfo: json.content })
-      // alert(JSON.stringify(json.content))
     }).catch(err => {
       console.log(err)
       alert("Could not fetch image data")
@@ -81,7 +80,6 @@ export default class SingleImageScreen extends React.Component {
     }).then((response) => { return response.json() })
       .then((response) => {
         if (response.statusCode == 200) {
-          // alert(JSON.stringify(response.content))
           this.setState({ imageInfo: response.content })
         } else (
           alert(response.message)
@@ -123,6 +121,7 @@ export default class SingleImageScreen extends React.Component {
     // alert(user)
     const onChange = (index) => {
       this.setState({ currentNumber: index}, () => this.getImageInfo() )
+      AsyncStorage.setItem('currentNumber', JSON.stringify(index))
     }
 
     const downvoteString = this.getDownvoteString()

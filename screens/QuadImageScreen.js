@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  View, Image, Dimensions, Text, Button, TouchableHighlight, StyleSheet
+  View, Image, Dimensions, Text, AsyncStorage, TouchableHighlight, StyleSheet
 } from 'react-native'
 import GestureRecognizer from 'react-native-swipe-gestures'
 import 'whatwg-fetch'
@@ -21,6 +21,7 @@ export default class QuadImageScreen extends React.Component {
   onSwipeRight(gestureState) {
     if (this.state.currentNumber > 3) {
       this.setState(previousState => {
+        AsyncStorage.setItem('currentNumber', JSON.stringify(previousState.currentNumber - 4))
         return { currentNumber: previousState.currentNumber - 4 }
       })
     } else {
@@ -32,10 +33,25 @@ export default class QuadImageScreen extends React.Component {
   onSwipeLeft(gestureState) {
     if (this.state.urls.length > this.state.currentNumber) {
       this.setState(previousState => {
+        AsyncStorage.setItem('currentNumber', JSON.stringify(previousState.currentNumber + 4))
         return { currentNumber: previousState.currentNumber + 4 }
       })
     }
   }
+
+  async getAsyncStorageData() {
+    try {
+      const keys = await AsyncStorage.multiGet(["currentNumber", "user"])
+      this.setState( {
+        currentNumber: parseInt(keys[0][1]),
+        user: keys[1][1]
+      })
+      alert(JSON.stringify(keys))
+    } catch(error) {
+      alert(error)
+    }
+  }
+
 
   componentDidMount() {
     fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/urls')
@@ -47,6 +63,7 @@ export default class QuadImageScreen extends React.Component {
         console.log(err)
         alert("Could not fetch images :(")
       })
+      this.getAsyncStorageData()
   }
 
   render() {

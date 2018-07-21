@@ -31,7 +31,7 @@ export default class QuadImageScreen extends React.Component {
 
   // make sure not to go over the amount of images loaded in fetch
   onSwipeLeft(gestureState) {
-    if (this.state.urls.length > this.state.currentNumber) {
+    if (this.state.urls.length-4 > this.state.currentNumber) {
       this.setState(previousState => {
         AsyncStorage.setItem('currentNumber', JSON.stringify(previousState.currentNumber + 4))
         return { currentNumber: previousState.currentNumber + 4 }
@@ -42,11 +42,12 @@ export default class QuadImageScreen extends React.Component {
   async getAsyncStorageData() {
     try {
       const keys = await AsyncStorage.multiGet(["currentNumber", "user"])
-      this.setState( {
-        currentNumber: parseInt(keys[0][1]),
-        user: keys[1][1]
-      })
-      alert(JSON.stringify(keys))
+      const currentNumber = parseInt(keys[0][1])
+      const user = keys[1][1]
+      if (currentNumber)
+        this.setState({currentNumber: currentNumber})
+      if (user)
+        this.setState({user: user})
     } catch(error) {
       alert(error)
     }
@@ -69,7 +70,6 @@ export default class QuadImageScreen extends React.Component {
   render() {
     const { navigate } = this.props.navigation
     const { currentNumber, urls, user } = this.state
-    // alert(user)
 
     if (urls == null) {
       return (
@@ -78,11 +78,6 @@ export default class QuadImageScreen extends React.Component {
         </View>
       )
     }
-
-    const img0 = { uri: urls[currentNumber].url }
-    const img1 = { uri: urls[currentNumber + 1].url }
-    const img2 = { uri: urls[currentNumber + 2].url }
-    const img3 = { uri: urls[currentNumber + 3].url }
 
     const styles = StyleSheet.create({
       img: {
@@ -112,6 +107,15 @@ export default class QuadImageScreen extends React.Component {
       {"title": "🔎", "action": () => null},
     ]
 
+    var num = currentNumber
+    if (currentNumber > urls.length-4) {
+      num = urls.length - 4
+    }
+    const img0 = { uri: urls[num].url }
+    const img1 = { uri: urls[num + 1].url }
+    const img2 = { uri: urls[num + 2].url }
+    const img3 = { uri: urls[num + 3].url }
+
     return (
         <GestureRecognizer
           onSwipeRight={(state) => this.onSwipeRight(state)}
@@ -124,7 +128,7 @@ export default class QuadImageScreen extends React.Component {
           <View style={{ flex: 1, flexDirection: "column" }}>
             <View style={{ flex: 1, flexDirection: "row" }}>
               <TouchableHighlight onPress={() =>
-                navigate('SingleImage', { num: currentNumber, setCurrentNumber: setCurrentNumber, urls: urls, user: user })} >
+                navigate('SingleImage', { num: num, setCurrentNumber: setCurrentNumber, urls: urls, user: user })} >
                 <Image
                   source={img0}
                   style={styles.img}
@@ -132,7 +136,7 @@ export default class QuadImageScreen extends React.Component {
               </TouchableHighlight>
               <View style={{ flex: 1, flexDirection: "row" }}>
                 <TouchableHighlight onPress={() =>
-                  navigate('SingleImage', { num: currentNumber + 1, setCurrentNumber: setCurrentNumber, urls: urls, user: user })} >
+                  navigate('SingleImage', { num: num + 1, setCurrentNumber: setCurrentNumber, urls: urls, user: user })} >
                   <Image
                     source={img1}
                     style={styles.img} />
@@ -142,14 +146,14 @@ export default class QuadImageScreen extends React.Component {
             <View style={{ flex: 1, flexDirection: "column" }}>
               <View style={{ flex: 1, flexDirection: "row" }}>
                 <TouchableHighlight onPress={() =>
-                  navigate('SingleImage', { num: currentNumber + 2, setCurrentNumber: setCurrentNumber, urls: urls, user: user })} >
+                  navigate('SingleImage', { num: num + 2, setCurrentNumber: setCurrentNumber, urls: urls, user: user })} >
                   <Image
                     source={img2}
                     style={styles.img} />
                 </TouchableHighlight>
                 <View style={{ flex: 1, flexDirection: "row" }}>
                   <TouchableHighlight onPress={() =>
-                    navigate('SingleImage', { num: currentNumber + 3, setCurrentNumber: setCurrentNumber, urls: urls, user: user })} >
+                    navigate('SingleImage', { num: num + 3, setCurrentNumber: setCurrentNumber, urls: urls, user: user })} >
                     <Image
                       source={img3}
                       style={styles.img} />

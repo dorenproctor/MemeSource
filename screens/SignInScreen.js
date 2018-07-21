@@ -87,31 +87,16 @@ export default class SingleImageScreen extends React.Component {
 
   render() {
     const { goBack } = this.props.navigation
-    const { urls, currentNumber, userText, emailText, passwordText, } = this.state
-    const onChange = (index) => {
-      this.setState({ currentNumber: index})
-    }
+    const { userText, emailText, passwordText, } = this.state
 
     const styles = StyleSheet.create({
       container: {
         flex: 1,
       },
       input: {
-        // flex: 1,
         height: 75,
       },
-      label: {
-        height: 50,
-      },
-      btn: {
-        
-      },
     })
-    const action = () => null
-
-    const backButton = () => {
-      goBack(null)
-    }
 
     const footerButtons = [
       {"title": "↶", "action": () => goBack(null)},
@@ -128,6 +113,7 @@ export default class SingleImageScreen extends React.Component {
           onChangeText={(text) => this.setState({userText: text})}
           style={styles.input}
           autoCapitalize={"none"}
+          textContentType={"username"}
           />
         <Text>Email</Text>
         <TextInput
@@ -135,6 +121,8 @@ export default class SingleImageScreen extends React.Component {
           onChangeText={(text) => this.setState({emailText: text})}
           style={styles.input}
           autoCapitalize={"none"}
+          textContentType={"emailAddress"}
+          keyboardType={"email-address"}
           />
         <Text>Password</Text>
         <TextInput
@@ -142,6 +130,7 @@ export default class SingleImageScreen extends React.Component {
           onChangeText={(text) => this.setState({passwordText: text})}
           style={styles.input}
           autoCapitalize={"none"}
+          textContentType={"password"}
           secureTextEntry={true}
           />
         <Text>{userText}{emailText}{passwordText}</Text>

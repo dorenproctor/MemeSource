@@ -57,7 +57,7 @@ export default class SingleImageScreen extends React.Component {
   }
 
   createUser() {
-    const { userText, emailText, passwordText, username } = this.state
+    const { userText, emailText, passwordText } = this.state
 
     if (!userText || !emailText || !passwordText) {
       alert("Username, email, and password are all required")
@@ -77,7 +77,7 @@ export default class SingleImageScreen extends React.Component {
       .then((response) => {
       alert(response.message)
       if (response.statusCode == 200) {
-        this.setState({ user: username })
+        this.setState({ user: userText })
         AsyncStorage.setItem('user', userText)
         const { goBack } = this.props.navigation
         goBack(null)

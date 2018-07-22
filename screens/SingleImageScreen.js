@@ -124,6 +124,7 @@ export default class SingleImageScreen extends React.Component {
     const onChange = (index) => {
       this.setState({ currentIndex: index, currentId: imageIds[index] })
       AsyncStorage.multiSet([['currentIndex', index.toString()], ['currentId', imageIds[index].toString()]])
+      this.getImageInfo()
     }
 
     const downvoteString = this.getDownvoteString()

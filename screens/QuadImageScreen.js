@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  View, Image, Dimensions, Text, AsyncStorage, TouchableHighlight, StyleSheet
+  View, Image, Dimensions, Text, AsyncStorage, TouchableHighlight, StyleSheet, Picker
 } from 'react-native'
 import GestureRecognizer from 'react-native-swipe-gestures'
 import 'whatwg-fetch'
@@ -14,7 +14,12 @@ export default class QuadImageScreen extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = { currentNumber: 0, urls: null, user: "" }
+    this.state = {
+      currentNumber: 0,
+      urls: null,
+      user: "",
+      sortBy: "newest"
+    }
   }
 
   // 4 images load each screen, make sure not to use neg numbers
@@ -53,18 +58,33 @@ export default class QuadImageScreen extends React.Component {
     }
   }
 
-
-  componentDidMount() {
-    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/urls')
-      .then((response) => {
-        return response.json()
-      }).then((json) => {
-        this.setState({ urls: json.content })
-      }).catch(err => {
-        console.log(err)
-        alert("Could not fetch images :(")
+  getImages() {
+    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/imageSearch', { 
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        sortBy: "newest",
       })
-      this.getAsyncStorageData()
+    }).then((response) => { return response.json() })
+    .then((json) => {
+      var urls = json.content.map(id => {
+        var newObj = {}
+        var string = "http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/getImage/" + id
+        newObj["url"] = string
+        return newObj
+      })
+      this.setState({ urls: urls })
+    }).catch(err => {
+      console.log(err)
+      alert("Could not fetch images :(")
+    })
+  }
+  
+  componentDidMount() {
+    this.getImages()
+    this.getAsyncStorageData()
   }
 
   render() {
@@ -162,6 +182,7 @@ export default class QuadImageScreen extends React.Component {
               </View>
             </View>
           </View>
+          <Picker />
           <Footer buttons={footerButtons}/>
         </GestureRecognizer>
     )

@@ -2,6 +2,8 @@ import React from 'react'
 import {
   View, Image, Dimensions, Text, AsyncStorage, TouchableHighlight, StyleSheet, Picker
 } from 'react-native'
+import ModalSelector from 'react-native-modal-selector'
+
 import GestureRecognizer from 'react-native-swipe-gestures'
 import 'whatwg-fetch'
 import Footer from '../components/Footer'
@@ -18,7 +20,8 @@ export default class QuadImageScreen extends React.Component {
       currentNumber: 0,
       urls: null,
       user: "",
-      sortBy: "newest"
+      sortBy: "newest",
+      selector: false,
     }
   }
 
@@ -65,7 +68,7 @@ export default class QuadImageScreen extends React.Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        sortBy: "newest",
+        sortBy: this.state.sortBy,
       })
     }).then((response) => { return response.json() })
     .then((json) => {
@@ -87,9 +90,18 @@ export default class QuadImageScreen extends React.Component {
     this.getAsyncStorageData()
   }
 
+  updateSorting(option) {
+    const oldSortBy = this.state.sortBy
+    if (oldSortBy !== option.label) {
+      this.setState({sortBy: option.label, selector: false, currentNumber: 0 }, () => { 
+        this.getImages()
+      })
+    }
+  }
+
   render() {
     const { navigate } = this.props.navigation
-    const { currentNumber, urls, user } = this.state
+    const { currentNumber, urls, user, selector, sortBy } = this.state
 
     if (urls == null) {
       return (
@@ -124,6 +136,7 @@ export default class QuadImageScreen extends React.Component {
     const footerButtons = [
       {"title": "☰", "action": () => null},
       {"title": "Sign In", "action": () => navigate('SignIn', { num: currentNumber, setCurrentNumber: setCurrentNumber, setUser: setUser, urls: urls })},
+      {"title": sortBy, "action": () => this.setState({selector: true})},
       {"title": "🔎", "action": () => null},
     ]
 
@@ -135,6 +148,14 @@ export default class QuadImageScreen extends React.Component {
     const img1 = { uri: urls[num + 1].url }
     const img2 = { uri: urls[num + 2].url }
     const img3 = { uri: urls[num + 3].url }
+
+    var dataKey = 0
+    const data = [
+        { key: dataKey++, section: true, label: 'Sort By' },
+        { key: dataKey++, label: 'newest' },
+        { key: dataKey++, label: 'oldest' },
+        { key: dataKey++, label: 'upvotes', },
+    ]
 
     return (
         <GestureRecognizer
@@ -182,7 +203,11 @@ export default class QuadImageScreen extends React.Component {
               </View>
             </View>
           </View>
-          <Picker />
+          <ModalSelector
+            data={data}
+            initValue="Select something yummy!"
+            visible={selector}
+            onChange={(option)=>{ this.updateSorting(option) }} />
           <Footer buttons={footerButtons}/>
         </GestureRecognizer>
     )

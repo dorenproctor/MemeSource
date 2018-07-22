@@ -10,7 +10,7 @@ export default class SingleImageScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentNumber: props.navigation.state.params.num,
+      currentIndex: props.navigation.state.params.num,
       user: this.props.navigation.state.params.user,
       commentInfo: null,
       turnModalOn: props.navigation.state.params.turnModalOn,
@@ -19,7 +19,7 @@ export default class SingleImageScreen extends React.Component {
   }
 
   getComments() {
-    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/commentInfo/'+this.state.currentNumber)
+    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/commentInfo/'+this.state.currentIndex)
     .then((response) => {
       return response.json()
     }).then((json) => {
@@ -55,7 +55,7 @@ export default class SingleImageScreen extends React.Component {
       },
       body: JSON.stringify({
         user: this.state.user,
-        imageId: this.state.currentNumber,
+        imageId: this.state.currentIndex,
         content: this.state.commentBox
       })
     }).then((response) => { return response.json() })

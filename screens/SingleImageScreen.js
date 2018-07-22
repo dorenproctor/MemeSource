@@ -11,8 +11,8 @@ export default class SingleImageScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentNumber: props.navigation.state.params.num,
-      setCurrentNumber: props.navigation.state.params.setCurrentNumber,
+      currentIndex: props.navigation.state.params.num,
+      setcurrentIndex: props.navigation.state.params.setcurrentIndex,
       urls: props.navigation.state.params.urls,
       imageInfo: null,
       user: this.props.navigation.state.params.user,
@@ -21,7 +21,7 @@ export default class SingleImageScreen extends React.Component {
   }
 
   getImageInfo() {
-    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/imageInfo/'+this.state.currentNumber)
+    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/imageInfo/'+this.state.currentIndex)
     .then((response) => {
       return response.json()
     }).then((json) => {
@@ -33,7 +33,7 @@ export default class SingleImageScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    this.state.setCurrentNumber(this.state.currentNumber)
+    this.state.setcurrentIndex(this.state.currentIndex)
   }
 
   componentDidMount() {
@@ -63,7 +63,7 @@ export default class SingleImageScreen extends React.Component {
   }
 
   upvote() {
-    const { user, currentNumber } = this.state
+    const { user, currentIndex } = this.state
     if (!user) {
       alert("You must be signed in to vote")
       return
@@ -75,7 +75,7 @@ export default class SingleImageScreen extends React.Component {
       },
       body: JSON.stringify({
         username: user,
-        imageId: currentNumber,
+        imageId: currentIndex,
       })
     }).then((response) => { return response.json() })
       .then((response) => {
@@ -88,7 +88,7 @@ export default class SingleImageScreen extends React.Component {
   }
 
   downvote() {
-    const { user, currentNumber } = this.state
+    const { user, currentIndex } = this.state
     if (!user) {
       alert("You must be signed in to vote")
       return
@@ -100,7 +100,7 @@ export default class SingleImageScreen extends React.Component {
       },
       body: JSON.stringify({
         username: user,
-        imageId: currentNumber,
+        imageId: currentIndex,
       })
     }).then((response) => { return response.json() })
       .then((response) => {
@@ -115,13 +115,13 @@ export default class SingleImageScreen extends React.Component {
 
   render() {
     const { goBack } = this.props.navigation
-    const { urls, currentNumber, modalOn } = this.state
+    const { urls, currentIndex, modalOn } = this.state
     const { user } = this.props.navigation.state.params
     const { navigate } = this.props.navigation
     // alert(user)
     const onChange = (index) => {
-      this.setState({ currentNumber: index}, () => this.getImageInfo() )
-      AsyncStorage.setItem('currentNumber', JSON.stringify(index))
+      this.setState({ currentIndex: index}, () => this.getImageInfo() )
+      AsyncStorage.setItem('currentIndex', JSON.stringify(index))
     }
 
     const downvoteString = this.getDownvoteString()
@@ -134,7 +134,7 @@ export default class SingleImageScreen extends React.Component {
       {"title": "↶", "action": () => goBack(null)},
       {"title": "💬", "action": () => {
         this.setState({ modalOn: false })
-        navigate('Comment', { num: currentNumber, user: user, turnModalOn: turnModalOn })}
+        navigate('Comment', { num: currentIndex, user: user, turnModalOn: turnModalOn })}
       },
       {"title": downvoteString, "action": () => this.downvote()},
       {"title": upvoteString, "action": () => this.upvote()},
@@ -164,7 +164,7 @@ export default class SingleImageScreen extends React.Component {
 
     return (
       <Modal visible={modalOn} transparent={true} onRequestClose={() => goBack(null)}>
-        <ImageViewer imageUrls={urls} index={currentNumber} onChange={onChange} renderIndicator={() => null} />
+        <ImageViewer imageUrls={urls} index={currentIndex} onChange={onChange} renderIndicator={() => null} />
         <Footer buttons={footerButtons} customStyle={customFooterStyle} />
       </Modal>
     )

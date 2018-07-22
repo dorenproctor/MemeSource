@@ -10,8 +10,8 @@ export default class SingleImageScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentNumber: props.navigation.state.params.num,
-      setCurrentNumber: props.navigation.state.params.setCurrentNumber,
+      currentIndex: props.navigation.state.params.num,
+      setcurrentIndex: props.navigation.state.params.setcurrentIndex,
       setUser: props.navigation.state.params.setUser,
       urls: props.navigation.state.params.urls,
       userText: "",
@@ -24,7 +24,7 @@ export default class SingleImageScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    this.state.setCurrentNumber(this.state.currentNumber)
+    this.state.setcurrentIndex(this.state.currentIndex)
     this.state.setUser(this.state.user)
   }
 

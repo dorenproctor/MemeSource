@@ -11,17 +11,19 @@ export default class SingleImageScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentIndex: props.navigation.state.params.num,
-      setcurrentIndex: props.navigation.state.params.setcurrentIndex,
+      currentIndex: props.navigation.state.params.currentIndex,
+      currentId: props.navigation.state.params.currentId,
+      imageIds: props.navigation.state.params.imageIds,
       urls: props.navigation.state.params.urls,
-      imageInfo: null,
       user: this.props.navigation.state.params.user,
+      updatePosition: props.navigation.state.params.updatePosition,
+      imageInfo: null,
       modalOn: true,
     }
   }
 
   getImageInfo() {
-    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/imageInfo/'+this.state.currentIndex)
+    fetch('http://ec2-18-188-44-41.us-east-2.compute.amazonaws.com/imageInfo/'+this.state.currentId)
     .then((response) => {
       return response.json()
     }).then((json) => {
@@ -33,7 +35,8 @@ export default class SingleImageScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    this.state.setcurrentIndex(this.state.currentIndex)
+    const {updatePosition, currentIndex, currentId} = this.state
+    updatePosition(currentIndex, currentId)
   }
 
   componentDidMount() {
@@ -63,7 +66,7 @@ export default class SingleImageScreen extends React.Component {
   }
 
   upvote() {
-    const { user, currentIndex } = this.state
+    const { user, currentId } = this.state
     if (!user) {
       alert("You must be signed in to vote")
       return
@@ -75,7 +78,7 @@ export default class SingleImageScreen extends React.Component {
       },
       body: JSON.stringify({
         username: user,
-        imageId: currentIndex,
+        imageId: currentId,
       })
     }).then((response) => { return response.json() })
       .then((response) => {
@@ -88,7 +91,7 @@ export default class SingleImageScreen extends React.Component {
   }
 
   downvote() {
-    const { user, currentIndex } = this.state
+    const { user, currentId } = this.state
     if (!user) {
       alert("You must be signed in to vote")
       return
@@ -100,12 +103,11 @@ export default class SingleImageScreen extends React.Component {
       },
       body: JSON.stringify({
         username: user,
-        imageId: currentIndex,
+        imageId: currentId,
       })
     }).then((response) => { return response.json() })
       .then((response) => {
         if (response.statusCode == 200) {
-          // alert(JSON.stringify(response.content))
           this.setState({ imageInfo: response.content })
         } else (
           alert(response.message)
@@ -115,13 +117,13 @@ export default class SingleImageScreen extends React.Component {
 
   render() {
     const { goBack } = this.props.navigation
-    const { urls, currentIndex, modalOn } = this.state
+    const { urls, imageIds, currentIndex, currentId, modalOn } = this.state
     const { user } = this.props.navigation.state.params
     const { navigate } = this.props.navigation
-    // alert(user)
+
     const onChange = (index) => {
-      this.setState({ currentIndex: index}, () => this.getImageInfo() )
-      AsyncStorage.setItem('currentIndex', JSON.stringify(index))
+      this.setState({ currentIndex: index, currentId: imageIds[index] })
+      AsyncStorage.multiSet([['currentIndex', index.toString()], ['currentId', imageIds[index].toString()]])
     }
 
     const downvoteString = this.getDownvoteString()
@@ -134,7 +136,7 @@ export default class SingleImageScreen extends React.Component {
       {"title": "↶", "action": () => goBack(null)},
       {"title": "💬", "action": () => {
         this.setState({ modalOn: false })
-        navigate('Comment', { num: currentIndex, user: user, turnModalOn: turnModalOn })}
+        navigate('Comment', { num: currentId, user: user, turnModalOn: turnModalOn })}
       },
       {"title": downvoteString, "action": () => this.downvote()},
       {"title": upvoteString, "action": () => this.upvote()},

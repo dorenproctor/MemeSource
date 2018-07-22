@@ -18,44 +18,61 @@ export default class QuadImageScreen extends React.Component {
     super(props)
     this.state = {
       currentIndex: 0,
+      currentId: 0,
+      imageIds: [],
       urls: null,
       user: "",
       sortBy: "newest",
       selector: false,
     }
+    this.updatePosition = this.updatePosition.bind(this)
+    this.setUser = this.setUser.bind(this)
+
   }
 
-  // 4 images load each screen, make sure not to use neg numbers
   onSwipeRight(gestureState) {
+    const {currentIndex, imageIds } = this.state
     if (this.state.currentIndex > 3) {
-      this.setState(previousState => {
-        AsyncStorage.setItem('currentIndex', JSON.stringify(previousState.currentIndex - 4))
-        return { currentIndex: previousState.currentIndex - 4 }
-      })
+      // AsyncStorage.setItem('currentId', JSON.stringify(currentIndex - 4))
+      AsyncStorage.multiSet([['currentIndex', (currentIndex-4).toString()], ['currentId', imageIds[currentIndex-4].toString()]])
+      this.setState({ currentIndex: currentIndex-4, currentId: imageIds[currentIndex] })
     } else {
-      this.setState({ currentIndex: 0 })
+      AsyncStorage.multiSet([['currentIndex', "0"], ['currentId', imageIds[0].toString()]])
+      this.setState({ currentIndex: 0, currentId: imageIds[0] })
     }
   }
 
-  // make sure not to go over the amount of images loaded in fetch
   onSwipeLeft(gestureState) {
-    if (this.state.urls.length-4 > this.state.currentIndex) {
-      this.setState(previousState => {
-        AsyncStorage.setItem('currentIndex', JSON.stringify(previousState.currentIndex + 4))
-        return { currentIndex: previousState.currentIndex + 4 }
-      })
+    const {currentIndex, imageIds } = this.state
+    if (imageIds.length-4 > this.state.currentIndex) {
+      AsyncStorage.multiSet([['currentIndex', (currentIndex+4).toString()], ['currentId', imageIds[currentIndex+4].toString()]])
+
+      this.setState({ currentIndex: currentIndex+4, currentId: imageIds[currentIndex] })
+    } else {
+      const last = imageIds.length-1
+      AsyncStorage.multiSet([['currentIndex', (last).toString()], ['currentId', imageIds[last].toString()]])
+      this.setState({ currentIndex: last, currentId: imageIds[last] })
     }
   }
 
   async getAsyncStorageData() {
     try {
-      const keys = await AsyncStorage.multiGet(["currentIndex", "user"])
-      const currentIndex = parseInt(keys[0][1])
+      const keys = await AsyncStorage.multiGet(["currentId", "user", "imageIds", "sortBy"])
+      const currentId = parseInt(keys[0][1])
       const user = keys[1][1]
-      if (currentIndex)
-        this.setState({currentIndex: currentIndex})
+      const imageIds = JSON.parse(keys[2][1])
+      const sortBy = keys[3][1]
+      if (currentId && imageIds) {
+        const currentIndex = imageIds.findIndex((x) => {return x==currentId})
+        if (currentIndex > -1) {
+          this.setState({imageIds: imageIds, currentId: currentId, currentIndex: currentIndex})
+        }
+      }
       if (user)
         this.setState({user: user})
+      if (sortBy) {
+        this.setState({sortBy: sortBy})
+      }
     } catch(error) {
       alert(error)
     }
@@ -78,7 +95,8 @@ export default class QuadImageScreen extends React.Component {
         newObj["url"] = string
         return newObj
       })
-      this.setState({ urls: urls })
+      this.setState({ urls: urls, imageIds: json.content, currentId: json.content[0] })
+      AsyncStorage.multiSet([['imageIds', JSON.stringify(json.content)], ['currentId', json.content[0].toString()]])
     }).catch(err => {
       console.log(err)
       alert("Could not fetch images :(")
@@ -86,17 +104,37 @@ export default class QuadImageScreen extends React.Component {
   }
   
   componentDidMount() {
-    this.getImages()
     this.getAsyncStorageData()
+    .then(() => {
+      if (!this.state.urls) {
+        this.getImages()
+      }
+    })
   }
 
+  updatePosition(index, id) {
+    this.setState({ currentIndex: index, currentId: id })
+  }
+
+  setUser(user) {
+    this.setState({ user: user })
+  }
+
+  openSingleImage(num) {
+    const { navigate } = this.props.navigation
+    const { urls, imageIds, user } = this.state
+    // AsyncStorage.multiSet([['imageIds', JSON.stringify(imageIds)], ['currentId', imageIds[0].toString()]])
+    navigate('SingleImage', { currentIndex: num, currentId: imageIds[num], imageIds: imageIds, urls: urls, user: user, updatePosition: this.updatePosition })
+  }
+  
   updateSorting(option) {
-    const oldSortBy = this.state.sortBy
-    if (oldSortBy !== option.label) {
-      this.setState({sortBy: option.label, selector: false, currentIndex: 0 }, () => { 
-        this.getImages()
-      })
-    }
+    // const oldSortBy = this.state.sortBy
+    // if (oldSortBy !== option.label) {
+    // }
+    this.setState({sortBy: option.label, selector: false, currentIndex: 0 }, () => { 
+      this.getImages()
+    })
+    AsyncStorage.setItem('sortBy', option.label)
   }
 
   render() {
@@ -125,17 +163,11 @@ export default class QuadImageScreen extends React.Component {
       directionalOffsetThreshold: 80
     }
 
-    const setcurrentIndex = (num) => {
-      this.setState({ currentIndex: num })
-    }
-
-    const setUser = (user) => {
-      this.setState({ user: user })
-    }
+    const userString = user ? user : "Sign In"
 
     const footerButtons = [
       {"title": "☰", "action": () => null},
-      {"title": "Sign In", "action": () => navigate('SignIn', { num: currentIndex, setcurrentIndex: setcurrentIndex, setUser: setUser, urls: urls })},
+      {"title": userString, "action": () => navigate('SignIn', { num: currentIndex, setUser: this.setUser, urls: urls })},
       {"title": sortBy, "action": () => this.setState({selector: true})},
       {"title": "🔎", "action": () => null},
     ]
@@ -144,7 +176,8 @@ export default class QuadImageScreen extends React.Component {
     if (currentIndex > urls.length-4) {
       num = urls.length - 4
     }
-    const img0 = { uri: urls[num].url }
+    // console.log(num)
+    const img0 = {  uri: urls[num].url }
     const img1 = { uri: urls[num + 1].url }
     const img2 = { uri: urls[num + 2].url }
     const img3 = { uri: urls[num + 3].url }
@@ -157,6 +190,7 @@ export default class QuadImageScreen extends React.Component {
         { key: dataKey++, label: 'upvotes', },
     ]
 
+
     return (
         <GestureRecognizer
           onSwipeRight={(state) => this.onSwipeRight(state)}
@@ -168,16 +202,14 @@ export default class QuadImageScreen extends React.Component {
           }}>
           <View style={{ flex: 1, flexDirection: "column" }}>
             <View style={{ flex: 1, flexDirection: "row" }}>
-              <TouchableHighlight onPress={() =>
-                navigate('SingleImage', { num: num, setcurrentIndex: setcurrentIndex, urls: urls, user: user })} >
+              <TouchableHighlight onPress={() => {this.openSingleImage(num)}} >
                 <Image
                   source={img0}
                   style={styles.img}
                 />
               </TouchableHighlight>
               <View style={{ flex: 1, flexDirection: "row" }}>
-                <TouchableHighlight onPress={() =>
-                  navigate('SingleImage', { num: num + 1, setcurrentIndex: setcurrentIndex, urls: urls, user: user })} >
+                <TouchableHighlight onPress={() => {this.openSingleImage(num+1)}} >
                   <Image
                     source={img1}
                     style={styles.img} />
@@ -186,15 +218,13 @@ export default class QuadImageScreen extends React.Component {
             </View>
             <View style={{ flex: 1, flexDirection: "column" }}>
               <View style={{ flex: 1, flexDirection: "row" }}>
-                <TouchableHighlight onPress={() =>
-                  navigate('SingleImage', { num: num + 2, setcurrentIndex: setcurrentIndex, urls: urls, user: user })} >
+                <TouchableHighlight onPress={() => {this.openSingleImage(num+2)}} >
                   <Image
                     source={img2}
                     style={styles.img} />
                 </TouchableHighlight>
                 <View style={{ flex: 1, flexDirection: "row" }}>
-                  <TouchableHighlight onPress={() =>
-                    navigate('SingleImage', { num: num + 3, setcurrentIndex: setcurrentIndex, urls: urls, user: user })} >
+                  <TouchableHighlight onPress={() => {this.openSingleImage(num+3)}} >
                     <Image
                       source={img3}
                       style={styles.img} />

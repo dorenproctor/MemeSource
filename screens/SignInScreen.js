@@ -11,7 +11,6 @@ export default class SingleImageScreen extends React.Component {
     super(props)
     this.state = {
       currentIndex: props.navigation.state.params.num,
-      setcurrentIndex: props.navigation.state.params.setcurrentIndex,
       setUser: props.navigation.state.params.setUser,
       urls: props.navigation.state.params.urls,
       userText: "",
@@ -24,7 +23,6 @@ export default class SingleImageScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    this.state.setcurrentIndex(this.state.currentIndex)
     this.state.setUser(this.state.user)
   }
 
@@ -50,8 +48,11 @@ export default class SingleImageScreen extends React.Component {
       if (response.statusCode == 200) {
         this.setState({ user: userText })
         AsyncStorage.setItem('user', userText)
+        alert("Signed in")
         const { goBack } = this.props.navigation
         goBack(null)
+      } else {
+        alert(response.message)
       }
     })
   }
@@ -75,14 +76,16 @@ export default class SingleImageScreen extends React.Component {
       })
     }).then((response) => { return response.json() })
       .then((response) => {
-      alert(response.message)
-      if (response.statusCode == 200) {
-        this.setState({ user: userText })
-        AsyncStorage.setItem('user', userText)
-        const { goBack } = this.props.navigation
-        goBack(null)
-      }
-    })
+        if (response.statusCode == 200) {
+          this.setState({ user: userText })
+          AsyncStorage.setItem('user', userText)
+          alert("Successfully created account")
+          const { goBack } = this.props.navigation
+          goBack(null)
+        } else {
+          alert(response.message)
+        }
+      })
   }
 
   render() {

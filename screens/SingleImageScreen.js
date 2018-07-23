@@ -2,6 +2,7 @@ import React from 'react'
 import { Modal, StyleSheet, AsyncStorage } from 'react-native'
 import ImageViewer from 'react-native-image-zoom-viewer'
 import Footer from '../components/Footer'
+import ModalSelector from 'react-native-modal-selector'
 
 export default class SingleImageScreen extends React.Component {
   static navigationOptions = {
@@ -15,10 +16,11 @@ export default class SingleImageScreen extends React.Component {
       currentId: props.navigation.state.params.currentId,
       imageIds: props.navigation.state.params.imageIds,
       urls: props.navigation.state.params.urls,
-      user: this.props.navigation.state.params.user,
+      user: props.navigation.state.params.user,
       updatePosition: props.navigation.state.params.updatePosition,
       imageInfo: null,
       modalOn: true,
+      selector: false,
     }
   }
 
@@ -115,16 +117,26 @@ export default class SingleImageScreen extends React.Component {
     })
   }
 
+  hamburgerMenu(option) {
+    switch(option.label) {
+      case "Image Info":
+        alert(JSON.stringify(this.state.imageInfo))
+        // this.setState({selector: false})
+        break
+    }
+  }
+
   render() {
     const { goBack } = this.props.navigation
-    const { urls, imageIds, currentIndex, currentId, modalOn } = this.state
+    const { urls, imageIds, currentIndex, currentId, modalOn, selector } = this.state
     const { user } = this.props.navigation.state.params
     const { navigate } = this.props.navigation
 
     const onChange = (index) => {
-      this.setState({ currentIndex: index, currentId: imageIds[index] })
+      this.setState({ currentIndex: index, currentId: imageIds[index] }, () => {
+        this.getImageInfo()
+      })
       AsyncStorage.multiSet([['currentIndex', index.toString()], ['currentId', imageIds[index].toString()]])
-      this.getImageInfo()
     }
 
     const downvoteString = this.getDownvoteString()
@@ -141,6 +153,7 @@ export default class SingleImageScreen extends React.Component {
       },
       {"title": downvoteString, "action": () => this.downvote()},
       {"title": upvoteString, "action": () => this.upvote()},
+      {"title": "☰", "action": () => this.setState({selector: true})},
     ]
 
     // Without the custom style, half the footer is below the screen
@@ -150,24 +163,38 @@ export default class SingleImageScreen extends React.Component {
         height: "100%",
       },
       container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
         height: 50,
-        backgroundColor: 'black',
+        backgroundColor: "black",
   
         borderRadius: 4,
         borderWidth: 0.5,
-        borderColor: 'darkgrey',
+        borderColor: "darkgrey",
       },
       buttonContainer: {
         flex: 1,
+      },
+      modalSelector: {
+        display: "none",
       }
     })
+
+    var dataKey = 0
+    const data = [
+        { key: dataKey++, label: "Image Info" },
+    ]
 
     return (
       <Modal visible={modalOn} transparent={true} onRequestClose={() => goBack(null)}>
         <ImageViewer imageUrls={urls} index={currentIndex} onChange={onChange} renderIndicator={() => null} />
+        <ModalSelector
+          data={data}
+          visible={selector}
+          onModalClose={() => this.setState({selector: false})}
+          touchableStyle={customFooterStyle.modalSelector}
+          onChange={(option)=>{ this.hamburgerMenu(option) }} />
         <Footer buttons={footerButtons} customStyle={customFooterStyle} />
       </Modal>
     )

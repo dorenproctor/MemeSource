@@ -131,7 +131,7 @@ export default class QuadImageScreen extends React.Component {
     // const oldSortBy = this.state.sortBy
     // if (oldSortBy !== option.label) {
     // }
-    this.setState({sortBy: option.label, selector: false, currentIndex: 0 }, () => { 
+    this.setState({sortBy: option.label, currentIndex: 0 }, () => { 
       this.getImages()
     })
     AsyncStorage.setItem('sortBy', option.label)
@@ -235,8 +235,8 @@ export default class QuadImageScreen extends React.Component {
           </View>
           <ModalSelector
             data={data}
-            initValue="Select something yummy!"
             visible={selector}
+            onModalClose={() => this.setState({selector: false})}
             onChange={(option)=>{ this.updateSorting(option) }} />
           <Footer buttons={footerButtons}/>
         </GestureRecognizer>

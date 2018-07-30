@@ -23,7 +23,8 @@ export default class QuadImageScreen extends React.Component {
       urls: null,
       user: "",
       sortBy: "newest",
-      selector: false,
+      sortSelector: false,
+      menuSelector: false,
     }
     this.updatePosition = this.updatePosition.bind(this)
     this.setUser = this.setUser.bind(this)
@@ -137,9 +138,18 @@ export default class QuadImageScreen extends React.Component {
     AsyncStorage.setItem('sortBy', option.label)
   }
 
+  openMenu(option) {
+    switch(option.label) {
+      case "skip x images":
+        alert("SKIP")
+        // this.setState({selector: false})
+        break
+    }
+  }
+
   render() {
     const { navigate } = this.props.navigation
-    const { currentIndex, urls, user, selector, sortBy } = this.state
+    const { currentIndex, urls, user, sortSelector, menuSelector, sortBy } = this.state
 
     if (urls == null) {
       return (
@@ -166,9 +176,9 @@ export default class QuadImageScreen extends React.Component {
     const userString = user ? user : "Sign In"
 
     const footerButtons = [
-      {"title": "☰", "action": () => null},
+      {"title": "☰", "action": () => this.setState({menuSelector: true})},
       {"title": userString, "action": () => navigate('SignIn', { num: currentIndex, setUser: this.setUser, urls: urls })},
-      {"title": sortBy, "action": () => this.setState({selector: true})},
+      {"title": sortBy, "action": () => this.setState({sortSelector: true})},
       {"title": "🔎", "action": () => null},
     ]
 
@@ -183,11 +193,15 @@ export default class QuadImageScreen extends React.Component {
     const img3 = { uri: urls[num + 3].url }
 
     var dataKey = 0
-    const data = [
+    const sortData = [
         { key: dataKey++, section: true, label: 'Sort By' },
         { key: dataKey++, label: 'newest' },
         { key: dataKey++, label: 'oldest' },
-        { key: dataKey++, label: 'upvotes', },
+        { key: dataKey++, label: 'upvotes' },
+    ]
+    dataKey = 0
+    const menuData = [
+        { key: dataKey++, label: 'skip x images' },
     ]
 
 
@@ -234,10 +248,15 @@ export default class QuadImageScreen extends React.Component {
             </View>
           </View>
           <ModalSelector
-            data={data}
-            visible={selector}
-            onModalClose={() => this.setState({selector: false})}
+            data={sortData}
+            visible={sortSelector}
+            onModalClose={() => this.setState({sortSelector: false})}
             onChange={(option)=>{ this.updateSorting(option) }} />
+          <ModalSelector
+            data={menuData}
+            visible={menuSelector}
+            onModalClose={() => this.setState({menuSelector: false})}
+            onChange={(option)=>{ this.openMenu(option) }} />
           <Footer buttons={footerButtons}/>
         </GestureRecognizer>
     )
